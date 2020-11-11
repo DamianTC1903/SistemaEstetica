@@ -1,0 +1,51 @@
+
+body{
+    background-color: brown;
+    background-color: -webkit-linear-gradient(to left, #00254A, #003C5D);
+    background: linear-gradient(left, #00254A, #003C5D);
+    background-attachment: fixed;
+}
+
+h3{
+    color: rgb(155, 56, 201);
+}
+
+.logo{
+    width: 200px;
+    border-radius: 50px;
+}
+
+
+.login{
+    padding: 25px;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 0 30px rgba(0,0,0,0.568);
+}
+
+input.caja-texto{
+    box-shadow: none;
+    transition: 0.5s;
+}
+
+input.caja-texto:hover{
+    border: 2px #003C5D solid;
+  
+    box-shadow: 0 0 5px  #003C5D;
+
+}
+
+input.btn {
+    border:  2px  #003C5D solid;
+    background-color: #003C5D;
+    color: white;
+    font-weight: 700!important;
+}
+
+input.btn:hover{
+    background-color: white;
+    transition: 0.5s;
+    font-weight: 700!important;
+    border:  2px  #003C5D solid;
+
+}
