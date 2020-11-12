@@ -12,6 +12,32 @@ if (!isset($_SESSION['verified']) || $_SESSION['verified'] !== true) {
 
 
 
+<?php
+include_once 'tablas/conexion.php';
+
+$sentencia_select = $con->prepare('SELECT *FROM usuarios INNER JOIN roles ON usuarios.id_rol=roles.id_rol ORDER BY id_usuario DESC');
+$sentencia_select->execute();
+$resultado = $sentencia_select->fetchAll();
+
+// metodo buscar
+if (isset($_POST['btn_buscar'])) {
+	$buscar_text = $_POST['buscar'];
+	$select_buscar = $con->prepare('
+			SELECT *FROM usuarios INNER JOIN roles ON usuarios.id_rol=roles.id_rol  WHERE nombre_usuario LIKE :campo OR id_usuario LIKE :campo;');
+
+
+
+
+	$select_buscar->execute(array(
+		':campo' => "%" . $buscar_text . "%"
+	));
+
+	$resultado = $select_buscar->fetchAll();
+}
+
+?>
+
+
 
 
 <!DOCTYPE html>
@@ -23,23 +49,30 @@ if (!isset($_SESSION['verified']) || $_SESSION['verified'] !== true) {
 	<!--CDN DE BOOSTRAP-->
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
 	<link rel="stylesheet" href="css/index.css">
+
+	<!--Diseños de botoones y texto descartado de momento-->
 	<script src="js/script.js"></script>
+
+
+	<!--Font Awesome para los iconos-->
+	<script src="https://kit.fontawesome.com/c2bcc47e82.js" crossorigin="anonymous"></script>
+
 </head>
 
 <body>
 
 
-
+	<!--Inicio del navbar-->
 	<nav class="navbar navbar-expand-lg navbar-light bg-light">
 		<img src="img/Logo.svg" width="60" height="60" class="d-inline-block align-top" alt="" loading="lazy">
-		Salón Frida
+		<a  class="nav-link href="index.php">Salón Frida</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
 
 		<div class="collapse navbar-collapse" id="navbarSupportedContent">
 			<ul class="navbar-nav mr-auto">
-				<li class="nav-item active">
+				<li class="nav-item">
 					<a class="nav-link" href="#">Proveedores <span class="sr-only">(current)</span></a>
 				</li>
 
@@ -48,7 +81,7 @@ if (!isset($_SESSION['verified']) || $_SESSION['verified'] !== true) {
 				</li>
 
 
-				<li class="nav-item dropdown">
+				<li class="nav-item dropdown active">
 					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						Usuarios
 					</a>
@@ -100,51 +133,80 @@ if (!isset($_SESSION['verified']) || $_SESSION['verified'] !== true) {
 
 				&nbsp;&nbsp;
 
-				<div class="btn" onclick="logout();">Salir</div>
+				<div class="btn btn-info" onclick="logout();">Salir</div>
 			</form>
 		</div>
 	</nav>
+	<!--Fin del navbar-->
 
 
 
 
 
+	<!--Card-->
+	<div class="container pt-3">
+		<div class="card" style="width: 50rem;">
+			<div class="card-body ">
+
+				<!--Card/inicio de mi tabla Usuarios-->
+
+				<div class="contenedor">
+					<h3>Agregar, actualizar o eliminar usuarios </h3>
+					<div >
+						<form action="" class="form-group pt-3" method="post">
+							<input type="text" name="buscar" placeholder="Buscar nombre, id" value="<?php if (isset($buscar_text)) echo $buscar_text; ?>" class="form-control ds-input">
+							<br>
+							<button type="submit" class="btn btn-outline-primary" name="btn_buscar" value="Buscar">
+								<i class="fas fa-search"></i> Buscar
+							</button>
+
+							<button  class="btn btn-outline-primary" >
+							<a href="insert.php" class="fas fa-user-plus" >Nuevo</a>
+							</button>
+
+						
+						</form>
+					</div>
+
+					<!--Card/tabla resposiva-->
+					<div class="table-responsive">
+						<table class="table">
+							<tr class="head">
+								<td>Id</td>
+								<td>Nombre</td>
+								<td>Contraseña</td>
+								<td>Rol</td>
+								<td colspan="2">Acción</td>
+							</tr>
+							<?php foreach ($resultado as $fila) : ?>
+								<tr>
+									<td><?php echo $fila['id_usuario']; ?></td>
+									<td><?php echo $fila['nombre_usuario']; ?></td>
+									<td><?php echo $fila['contraseña_usuario']; ?></td>
+									<td><?php echo $fila['nombre_rol']; ?></td>
+									<td><a href="update.php?id=<?php echo $fila['id_usuario']; ?>" class="btn btn-info">Editar</a></td>
+									<td><a href="tablas/delete.php?id=<?php echo $fila['id_usuario']; ?>" class="btn btn-danger">Eliminar</a></td>
+								</tr>
+							<?php endforeach ?>
+						</table>
+					</div>
+					<!--Card/tabla resposiva-->
+				</div>
+				<!--Card/Fin de mi tabla Usuarios-->
 
 
-<div class="container pt-3" >
-
-<div class="card" style="width: 25rem;">
-  <div class="card-body ">
-    
-
-  <form>
-  <div class="form-group  ">
-    <label for="exampleInputEmail1">Email address</label>
-    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-  </div>
-  <div class="form-group  ">
-    <label for="exampleInputPassword1">Password</label>
-    <input type="password" class="form-control" id="exampleInputPassword1">
-  </div>
-  <div class="form-group form-check   ">
-    <input type="checkbox" class="form-check-input" id="exampleCheck1">
-    <label class="form-check-label" for="exampleCheck1">Check me out</label>
-  </div>
-  <button type="submit" class="btn btn-primary">Submit</button>
-</form>
-  
-
-  </div>
-</div>
 
 
-  </div>
+			</div>
+		</div>
+	</div>
+
+	<!--Fin del card-->
 
 
 
 
-
+	<!--Estilo de boton_lo suplimos por bootstrap
 
 	<style>
 		.btn {
@@ -169,6 +231,10 @@ if (!isset($_SESSION['verified']) || $_SESSION['verified'] !== true) {
 			box-shadow: inset 0 0 3px 4px rgba(0, 0, 0, .2);
 		}
 	</style>
+
+-->
+
+
 
 
 

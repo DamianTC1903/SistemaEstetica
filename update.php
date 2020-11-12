@@ -10,7 +10,51 @@ if (!isset($_SESSION['verified']) || $_SESSION['verified'] !== true) {
 ?>
 
 
+<?php
+include_once 'tablas/conexion.php';
 
+if (isset($_GET['id'])) {
+	$id = (int) $_GET['id'];
+
+	$buscar_id = $con->prepare('SELECT * FROM usuarios WHERE id_usuario=:id LIMIT 1');
+	$buscar_id->execute(array(
+		':id' => $id
+	));
+	$resultado = $buscar_id->fetch();
+} else {
+	header('Location: index.php');
+}
+
+
+if (isset($_POST['guardar'])) {
+	$nombre = $_POST['nombre'];
+	$apellidos = $_POST['apellidos'];
+	$telefono = $_POST['telefono'];
+	$ciudad = $_POST['ciudad'];
+	$id = (int) $_GET['id'];
+
+	if (!empty($nombre) && !empty($apellidos) && !empty($telefono) && !empty($ciudad)) {
+
+		$consulta_update = $con->prepare(' UPDATE usuarios SET  
+					id_usuario=:nombre,
+					nombre_usuario=:apellidos,
+					contraseña_usuario=:telefono,
+					id_rol=:ciudad
+					WHERE id_usuario=:id;');
+		$consulta_update->execute(array(
+			':nombre' => $nombre,
+			':apellidos' => $apellidos,
+			':telefono' => $telefono,
+			':ciudad' => $ciudad,
+			':id' => $id
+		));
+		header('Location: Usuarios.php');
+	} else {
+		echo "<script> alert('No se hiso ningun cambio');</script>";
+	}
+}
+
+?>
 
 
 
@@ -23,23 +67,30 @@ if (!isset($_SESSION['verified']) || $_SESSION['verified'] !== true) {
 	<!--CDN DE BOOSTRAP-->
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
 	<link rel="stylesheet" href="css/index.css">
-	<script src="js/script.js"></script>
+
+	<!--Diseños de botoones y texto descartado de momento-->
+	<script src="\stetica2/js/script.js"></script>
+
+
+	<!--Font Awesome para los iconos-->
+	<script src="https://kit.fontawesome.com/c2bcc47e82.js" crossorigin="anonymous"></script>
+
 </head>
 
 <body>
 
 
-
+	<!--Inicio del navbar-->
 	<nav class="navbar navbar-expand-lg navbar-light bg-light">
-		<img src="img/Logo.svg" width="60" height="60" class="d-inline-block align-top" alt="" loading="lazy">
-		Salón Frida
+		<img src="\stetica2/img/Logo.svg" width="60" height="60" class="d-inline-block align-top" alt="" loading="lazy">
+		<a  class="nav-link href="index.php">Salón Frida</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
 
 		<div class="collapse navbar-collapse" id="navbarSupportedContent">
 			<ul class="navbar-nav mr-auto">
-				<li class="nav-item active">
+				<li class="nav-item">
 					<a class="nav-link" href="#">Proveedores <span class="sr-only">(current)</span></a>
 				</li>
 
@@ -48,7 +99,7 @@ if (!isset($_SESSION['verified']) || $_SESSION['verified'] !== true) {
 				</li>
 
 
-				<li class="nav-item dropdown">
+				<li class="nav-item dropdown active">
 					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						Usuarios
 					</a>
@@ -100,51 +151,61 @@ if (!isset($_SESSION['verified']) || $_SESSION['verified'] !== true) {
 
 				&nbsp;&nbsp;
 
-				<div class="btn" onclick="logout();">Salir</div>
+				<div class="btn btn-info" onclick="logout();">Salir</div>
 			</form>
 		</div>
 	</nav>
+	<!--Fin del navbar-->
 
 
 
 
 
+	<!--Card-->
+	<div class="container pt-3">
+		<div class="card" style="width: 50rem;">
+			<div class="card-body ">
+			<h4>Esta editando al usuario: <?php if ($resultado) echo $resultado['nombre_usuario']; ?></h4>
+		<form action="" method="post">
+			<div class="form-group">
+				<input type="hidden" name="nombre" value="<?php if ($resultado) echo $resultado['id_usuario']; ?>" class="form-control">
+				<input type="text" name="apellidos" value="<?php if ($resultado) echo $resultado['nombre_usuario']; ?>" class="form-control" >
+			</div>
+			<div class="form-group">
+				<input type="password" name="telefono" value="<?php if ($resultado) echo $resultado['contraseña_usuario']; ?>" class="form-control" >
+				
+			</div>
+
+			<div class="form-group">
+				
+			<select name="ciudad" class="custom-select" required>
+					<option value="">Roles</option>
+					<option value="1">Encarcada</option>
+					<option value="2">Dueña</option>
+					<option value="3">Empleado</option>
+				</select>
+			</div>
+	
+			<div class="btn_group">
+				<a href="\stetica2/Usuarios.php" class="btn btn-secondary">Cancelar</a>
+				<input type="submit" name="guardar" value="Guardar" class="btn btn-success">
+			</div>
+		</form>
+				
 
 
-<div class="container pt-3" >
-
-<div class="card" style="width: 25rem;">
-  <div class="card-body ">
-    
-
-  <form>
-  <div class="form-group  ">
-    <label for="exampleInputEmail1">Email address</label>
-    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-  </div>
-  <div class="form-group  ">
-    <label for="exampleInputPassword1">Password</label>
-    <input type="password" class="form-control" id="exampleInputPassword1">
-  </div>
-  <div class="form-group form-check   ">
-    <input type="checkbox" class="form-check-input" id="exampleCheck1">
-    <label class="form-check-label" for="exampleCheck1">Check me out</label>
-  </div>
-  <button type="submit" class="btn btn-primary">Submit</button>
-</form>
-  
-
-  </div>
-</div>
 
 
-  </div>
+			</div>
+		</div>
+	</div>
+
+	<!--Fin del card-->
 
 
 
 
-
+	<!--Estilo de boton_lo suplimos por bootstrap
 
 	<style>
 		.btn {
@@ -169,6 +230,10 @@ if (!isset($_SESSION['verified']) || $_SESSION['verified'] !== true) {
 			box-shadow: inset 0 0 3px 4px rgba(0, 0, 0, .2);
 		}
 	</style>
+
+-->
+
+
 
 
 
