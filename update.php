@@ -180,8 +180,8 @@ if (isset($_POST['guardar'])) {
 				
 			<select name="ciudad" class="custom-select" required>
 					<option value="">Roles</option>
-					<option value="1">Encarcada</option>
-					<option value="2">Dueña</option>
+					<option value="1">Dueña</option>
+					<option value="2">Encargada</option>
 					<option value="3">Empleado</option>
 				</select>
 			</div>
