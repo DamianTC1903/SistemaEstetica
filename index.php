@@ -10,6 +10,9 @@ if (!isset($_SESSION['verified']) || $_SESSION['verified'] !== true) {
 ?>
 
 
+<?php
+include_once 'php/consultasEmpleados.php';
+?>
 
 
 
@@ -26,13 +29,24 @@ if (!isset($_SESSION['verified']) || $_SESSION['verified'] !== true) {
 	<script src="js/script.js"></script>
 </head>
 
+
+
+<style>
+	body {
+		background-color: #330000;
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' viewBox='0 0 800 400'%3E%3Cdefs%3E%3CradialGradient id='a' cx='396' cy='281' r='514' gradientUnits='userSpaceOnUse'%3E%3Cstop offset='0' stop-color='%23D18'/%3E%3Cstop offset='1' stop-color='%23330000'/%3E%3C/radialGradient%3E%3ClinearGradient id='b' gradientUnits='userSpaceOnUse' x1='400' y1='148' x2='400' y2='333'%3E%3Cstop offset='0' stop-color='%23FA3' stop-opacity='0'/%3E%3Cstop offset='1' stop-color='%23FA3' stop-opacity='0.5'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='url(%23a)' width='800' height='400'/%3E%3Cg fill-opacity='0.4'%3E%3Ccircle fill='url(%23b)' cx='267.5' cy='61' r='300'/%3E%3Ccircle fill='url(%23b)' cx='532.5' cy='61' r='300'/%3E%3Ccircle fill='url(%23b)' cx='400' cy='30' r='300'/%3E%3C/g%3E%3C/svg%3E");
+		background-attachment: fixed;
+		background-size: cover;
+	}
+</style>
+
 <body>
 
 
 
 	<nav class="navbar navbar-expand-lg navbar-light bg-light">
 		<img src="img/Logo.svg" width="60" height="60" class="d-inline-block align-top" alt="" loading="lazy">
-		Salón Frida
+		<a class="nav-link" href="index.php">Salón Frida <span class="sr-only">(current)</span></a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
@@ -111,35 +125,102 @@ if (!isset($_SESSION['verified']) || $_SESSION['verified'] !== true) {
 
 
 
-<div class="container pt-3" >
-
-<div class="card" style="width: 25rem;">
-  <div class="card-body ">
-    
-
-  <form>
-  <div class="form-group  ">
-    <label for="exampleInputEmail1">Email address</label>
-    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-  </div>
-  <div class="form-group  ">
-    <label for="exampleInputPassword1">Password</label>
-    <input type="password" class="form-control" id="exampleInputPassword1">
-  </div>
-  <div class="form-group form-check   ">
-    <input type="checkbox" class="form-check-input" id="exampleCheck1">
-    <label class="form-check-label" for="exampleCheck1">Check me out</label>
-  </div>
-  <button type="submit" class="btn btn-primary">Submit</button>
-</form>
-  
-
-  </div>
-</div>
 
 
-  </div>
+	<div class="container pt-3">
+		<!--Aqui ira nuestro dashboard-->
+		<div class="row pt-3">
+			<div class="col-sm-3">
+				<div class="card">
+					<div class="card-body">
+						<button type="button" class="btn btn-primary">
+							Ventas <span class="badge badge-light">4</span>
+						</button>
+					</div>
+				</div>
+			</div>
+
+
+			<div class="col-sm-3">
+				<div class="card">
+					<div class="card-body">
+						<button type="button" class="btn btn-primary">
+							Clientes <span class="badge badge-light">4</span>
+						</button>
+					</div>
+				</div>
+			</div>
+
+
+
+			<div class="col-sm-3">
+				<div class="card">
+					<div class="card-body">
+						<button type="button" class="btn btn-primary">
+							Empleados <span class="badge badge-light"><?php  echo $TotalVentas?></span>
+						</button>
+					</div>
+				</div>
+			</div>
+
+
+			<div class="col-sm-3">
+				<div class="card">
+					<div class="card-body">
+						<button type="button" class="btn btn-primary">
+							Productos <span class="badge badge-light">4</span>
+						</button>
+					</div>
+				</div>
+			</div>
+
+
+		</div>
+	</div>
+	<!--Aqui ira nuestro dashboard-->
+
+
+
+
+
+
+
+
+	<div class="container pt-3">
+
+		<div class="card" style="width: 25rem;">
+			<div class="card-body ">
+
+
+				<form>
+					<div class="form-group  ">
+						<label for="exampleInputEmail1">Email address</label>
+						<input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+						<small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+					</div>
+					<div class="form-group  ">
+						<label for="exampleInputPassword1">Password</label>
+						<input type="password" class="form-control" id="exampleInputPassword1">
+					</div>
+					<div class="form-group form-check   ">
+						<input type="checkbox" class="form-check-input" id="exampleCheck1">
+						<label class="form-check-label" for="exampleCheck1">Check me out</label>
+					</div>
+					<button type="submit" class="btn btn-primary">Submit</button>
+				</form>
+
+
+			</div>
+		</div>
+
+
+	</div>
+
+
+
+
+
+
 
 
 

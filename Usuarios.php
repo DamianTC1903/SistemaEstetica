@@ -39,7 +39,6 @@ if (isset($_POST['btn_buscar'])) {
 
 
 
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -59,13 +58,21 @@ if (isset($_POST['btn_buscar'])) {
 
 </head>
 
-<body>
+<style>
+	body {
+		background-color: #330000;
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' viewBox='0 0 800 400'%3E%3Cdefs%3E%3CradialGradient id='a' cx='396' cy='281' r='514' gradientUnits='userSpaceOnUse'%3E%3Cstop offset='0' stop-color='%23D18'/%3E%3Cstop offset='1' stop-color='%23330000'/%3E%3C/radialGradient%3E%3ClinearGradient id='b' gradientUnits='userSpaceOnUse' x1='400' y1='148' x2='400' y2='333'%3E%3Cstop offset='0' stop-color='%23FA3' stop-opacity='0'/%3E%3Cstop offset='1' stop-color='%23FA3' stop-opacity='0.5'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='url(%23a)' width='800' height='400'/%3E%3Cg fill-opacity='0.4'%3E%3Ccircle fill='url(%23b)' cx='267.5' cy='61' r='300'/%3E%3Ccircle fill='url(%23b)' cx='532.5' cy='61' r='300'/%3E%3Ccircle fill='url(%23b)' cx='400' cy='30' r='300'/%3E%3C/g%3E%3C/svg%3E");
+		background-attachment: fixed;
+		background-size: cover;
+	}
+</style>
 
+<body>
 
 	<!--Inicio del navbar-->
 	<nav class="navbar navbar-expand-lg navbar-light bg-light">
 		<img src="img/Logo.svg" width="60" height="60" class="d-inline-block align-top" alt="" loading="lazy">
-		<a  class="nav-link href="index.php">Salón Frida</a>
+		<a class="nav-link" href="index.php">Salón Frida <span class="sr-only">(current)</span></a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
@@ -141,11 +148,12 @@ if (isset($_POST['btn_buscar'])) {
 
 
 
+	
 
 
 	<!--Card-->
 	<div class="container pt-3">
-		<div class="card" style="width: 50rem;">
+		<div class="card" style="width: 50rem;" >
 			<div class="card-body ">
 
 				<!--Card/inicio de mi tabla Usuarios-->
@@ -182,7 +190,8 @@ if (isset($_POST['btn_buscar'])) {
 								<tr>
 									<td><?php echo $fila['id_usuario']; ?></td>
 									<td><?php echo $fila['nombre_usuario']; ?></td>
-									<td><?php echo $fila['contraseña_usuario']; ?></td>
+									<!--ocultamos la contraseña  <td><//?php echo $fila['contraseña_usuario']; ?></td>-->
+									<td><?php echo $ContraseñaOculta="*********"; ?></td>
 									<td><?php echo $fila['nombre_rol']; ?></td>
 									<td><a href="update.php?id=<?php echo $fila['id_usuario']; ?>" class="btn btn-info">Editar</a></td>
 									<td><a href="tablas/delete.php?id=<?php echo $fila['id_usuario']; ?>" class="btn btn-danger">Eliminar</a></td>
@@ -204,7 +213,7 @@ if (isset($_POST['btn_buscar'])) {
 	<!--Fin del card-->
 
 
-
+	</div>
 
 	<!--Estilo de boton_lo suplimos por bootstrap
 
