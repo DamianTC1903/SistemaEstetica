@@ -7,3 +7,7 @@ user:damian pasword: admin
 -Login secure
 -Roles de usuario
 -Base de datos relacional
+-Se añadio index dashboard(Total empleados, ventas etc.)
+-Diseño de body agregado
+
+Tablas: Se oculto la contraseña de las tablas
