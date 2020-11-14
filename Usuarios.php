@@ -1,10 +1,13 @@
 <?php
 session_start();
-
+include_once 'php/obtenerRol.php';
 if (!isset($_SESSION['verified']) || $_SESSION['verified'] !== true) {
 	header("Location: login.php");
 
 
+	die();
+}else if(!isset($_SESSION['verified']) || $tipo == "Empleada"){
+	header("Location: error/403.php");
 	die();
 }
 ?>

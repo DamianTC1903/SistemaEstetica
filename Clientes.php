@@ -1,6 +1,9 @@
+
+
+
 <?php
 session_start();
-
+include_once 'php/obtenerRol.php';
 if (!isset($_SESSION['verified']) || $_SESSION['verified'] !== true) {
 	header("Location: login.php");
 
@@ -8,6 +11,7 @@ if (!isset($_SESSION['verified']) || $_SESSION['verified'] !== true) {
 	die();
 }
 ?>
+
 
 
 
@@ -92,7 +96,7 @@ if (isset($_POST['btn_buscar'])) {
 				</li>
 
 
-				<li class="nav-item dropdown active">
+				<li class="nav-item dropdown active" <?php echo $restringido ?>>
 					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						Usuarios
 					</a>
@@ -139,8 +143,7 @@ if (isset($_POST['btn_buscar'])) {
 				</li>
 			</ul>
 			<form class="form-inline my-2 my-lg-0">
-				<h5>bienvenido(a): <?php
-									echo $_SESSION["nombre_usuario"]; ?></h5>
+			<h5>bienvenido(a): <?php echo $_SESSION["nombre_usuario"]." ". $tipo; ?></h5>
 
 				&nbsp;&nbsp;
 
