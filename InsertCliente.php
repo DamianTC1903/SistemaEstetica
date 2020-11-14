@@ -11,31 +11,35 @@ if (!isset($_SESSION['verified']) || $_SESSION['verified'] !== true) {
 
 
 
-
 <?php
 include_once 'tablas/conexion.php';
 
-$sentencia_select = $con->prepare('SELECT *FROM usuarios INNER JOIN roles ON usuarios.id_rol=roles.id_rol ORDER BY id_usuario DESC');
-$sentencia_select->execute();
-$resultado = $sentencia_select->fetchAll();
+if (isset($_POST['guardar'])) {
+	$nombre = $_POST['nombre'];
+	$apellidos = $_POST['apellidos'];
+	$telefono = $_POST['telefono'];
+	$ciudad = $_POST['ciudad'];
+	$telefono_cliente = $_POST['telefono_cliente'];
 
-// metodo buscar
-if (isset($_POST['btn_buscar'])) {
-	$buscar_text = $_POST['buscar'];
-	$select_buscar = $con->prepare('
-			SELECT *FROM usuarios INNER JOIN roles ON usuarios.id_rol=roles.id_rol  WHERE nombre_usuario LIKE :campo OR id_usuario LIKE :campo;');
+	if (!empty($apellidos) && !empty($telefono) && !empty($ciudad)  && !empty($telefono_cliente)) {
 
-
-
-
-	$select_buscar->execute(array(
-		':campo' => "%" . $buscar_text . "%"
-	));
-
-	$resultado = $select_buscar->fetchAll();
+		$consulta_insert = $con->prepare('INSERT INTO clientes(id_cliente,nombre_cliente,direccion_cliente,localidad_cliente,telefono_cliente) VALUES(:nombre,:apellidos,:telefono,:ciudad,:telefono_cliente)');
+		$consulta_insert->execute(array(
+			':nombre' => $nombre,
+			':apellidos' => $apellidos,
+			':telefono' => $telefono,
+			':ciudad' => $ciudad,
+			':telefono_cliente' => $telefono_cliente
+		));
+		header('Location: Clientes.php');
+	} else {
+		echo "<script> alert('Los campos estan vacios');</script>";
+	}
 }
 
+
 ?>
+
 
 
 
@@ -50,7 +54,7 @@ if (isset($_POST['btn_buscar'])) {
 	<link rel="stylesheet" href="css/index.css">
 
 	<!--Diseños de botoones y texto descartado de momento-->
-	<script src="js/script.js"></script>
+	<script src="\stetica2/js/script.js"></script>
 
 
 	<!--Font Awesome para los iconos-->
@@ -58,10 +62,11 @@ if (isset($_POST['btn_buscar'])) {
 
 </head>
 
+
 <style>
 	body {
 		background-color: #330000;
-		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' viewBox='0 0 800 400'%3E%3Cdefs%3E%3CradialGradient id='a' cx='396' cy='281' r='514' gradientUnits='userSpaceOnUse'%3E%3Cstop offset='0' stop-color='%23D18'/%3E%3Cstop offset='1' stop-color='%23330000'/%3E%3C/radialGradient%3E%3ClinearGradient id='b' gradientUnits='userSpaceOnUse' x1='400' y1='148' x2='400' y2='333'%3E%3Cstop offset='0' stop-color='%23FA3' stop-opacity='0'/%3E%3Cstop offset='1' stop-color='%23FA3' stop-opacity='0.5'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='url(%23a)' width='800' height='400'/%3E%3Cg fill-opacity='0.4'%3E%3Ccircle fill='url(%23b)' cx='267.5' cy='61' r='300'/%3E%3Ccircle fill='url(%23b)' cx='532.5' cy='61' r='300'/%3E%3Ccircle fill='url(%23b)' cx='400' cy='30' r='300'/%3E%3C/g%3E%3C/svg%3E");
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' viewBox='0 0 800 400'%3E%3Cdefs%3E%3CradialGradient id='a' cx='396' cy='281' r='514' gradientUnits='userSpaceOnUse'%3E%3Cstop offset='0' stop-color='%23D18'/%3E%3Cstop offset='1' stop-color='%23330000'/%3E%3C/radialGradient%3E%3ClinearGradient id='b' gradientUnits='userSpaceOnUse' x1='400' y1='148' x2='400' y2='333'%3E%3Cstop offset='0' stop-color='%23f4ff9e' stop-opacity='0'/%3E%3Cstop offset='1' stop-color='%23f4ff9e' stop-opacity='0.5'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='url(%23a)' width='800' height='400'/%3E%3Cg fill-opacity='0.4'%3E%3Ccircle fill='url(%23b)' cx='267.5' cy='61' r='300'/%3E%3Ccircle fill='url(%23b)' cx='532.5' cy='61' r='300'/%3E%3Ccircle fill='url(%23b)' cx='400' cy='30' r='300'/%3E%3C/g%3E%3C/svg%3E");
 		background-attachment: fixed;
 		background-size: cover;
 	}
@@ -69,9 +74,10 @@ if (isset($_POST['btn_buscar'])) {
 
 <body>
 
+
 	<!--Inicio del navbar-->
 	<nav class="navbar navbar-expand-lg navbar-light bg-light">
-		<img src="img/Logo.svg" width="60" height="60" class="d-inline-block align-top" alt="" loading="lazy">
+		<img href="#" src="\stetica2/img/Logo.svg" width="60" height="60" class="d-inline-block align-top" alt="" loading="lazy">
 		<a class="nav-link" href="index.php">Salón Frida <span class="sr-only">(current)</span></a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
@@ -148,60 +154,39 @@ if (isset($_POST['btn_buscar'])) {
 
 
 
-	
 
 
 	<!--Card-->
 	<div class="container pt-3">
-		<div class="card" style="width: 50rem;" >
+		<div class="card" style="width: 50rem;">
 			<div class="card-body ">
-
-				<!--Card/inicio de mi tabla Usuarios-->
-
-				<div class="contenedor">
-					<h3>Agregar, actualizar o eliminar usuarios </h3>
-					<div >
-						<form action="" class="form-group pt-3" method="post">
-							<input type="text" name="buscar" placeholder="Buscar nombre, id" value="<?php if (isset($buscar_text)) echo $buscar_text; ?>" class="form-control ds-input">
-							<br>
-							<button type="submit" class="btn btn-outline-primary" name="btn_buscar" value="Buscar">
-								<i class="fas fa-search"></i> Buscar
-							</button>
-
-							<button  class="btn btn-outline-primary" >
-							<a href="insert.php" class="fas fa-user-plus" >Nuevo</a>
-							</button>
-
-						
-						</form>
+				<h4>Datos del nuevo Empleado</h4>
+				<form action="" method="post">
+					<div class="form-group">
+						<input type="hidden" name="nombre" value="" class="form-control">
+						<input type="text" name="apellidos" placeholder="Nombre" class="form-control" required>
 					</div>
 
-					<!--Card/tabla resposiva-->
-					<div class="table-responsive">
-						<table class="table">
-							<tr class="head">
-								<td>Id</td>
-								<td>Nombre</td>
-								<td>Contraseña</td>
-								<td>Rol</td>
-								<td colspan="2">Acción</td>
-							</tr>
-							<?php foreach ($resultado as $fila) : ?>
-								<tr>
-									<td><?php echo $fila['id_usuario']; ?></td>
-									<td><?php echo $fila['nombre_usuario']; ?></td>
-									<!--ocultamos la contraseña  <td><//?php echo $fila['contraseña_usuario']; ?></td>-->
-									<td><?php echo $ContraseñaOculta="*********"; ?></td>
-									<td><?php echo $fila['nombre_rol']; ?></td>
-									<td><a href="update.php?id=<?php echo $fila['id_usuario']; ?>" class="btn btn-info">Editar</a></td>
-									<td><a href="tablas/delete.php?id=<?php echo $fila['id_usuario']; ?>" class="btn btn-danger">Eliminar</a></td>
-								</tr>
-							<?php endforeach ?>
-						</table>
+					<div class="form-group">
+						<input type="text" name="telefono" placeholder="Direccion" class="form-control" required>
 					</div>
-					<!--Card/tabla resposiva-->
-				</div>
-				<!--Card/Fin de mi tabla Usuarios-->
+
+					<div class="form-group">
+						<input type="text" name="ciudad" placeholder="Localidad" class="form-control" required>
+					</div>
+
+					<div class="form-group">
+						<input type="tel" name="telefono_cliente" placeholder="Telefono ej. 9994-23-23-24" class="form-control" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9]{2}" required>
+					</div>
+
+					
+
+					<div class="btn_group">
+						<a href="Clientes.php" class="btn btn-secondary">Cancelar</a>
+						<input type="submit" name="guardar" value="Guardar" class="btn btn-success">
+					</div>
+				</form>
+
 
 
 
@@ -213,7 +198,7 @@ if (isset($_POST['btn_buscar'])) {
 	<!--Fin del card-->
 
 
-	</div>
+
 
 	<!--Estilo de boton_lo suplimos por bootstrap
 

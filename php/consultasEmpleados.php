@@ -19,6 +19,20 @@ $TotalVentas = $data['total'];
 //$result = $conn->query($sql);
 
 
+
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+  }
+  $result=mysqli_query($conn, "SELECT count(*) as total from clientes");
+  $data=mysqli_fetch_assoc($result);
+  //echo $data['total'];
+  
+  $TotalClientes = $data['total'];
+  //$sql = "SELECT id, firstname, lastname FROM MyGuests";
+  //$result = $conn->query($sql);
+
+
 $conn->close();
 ?>
 

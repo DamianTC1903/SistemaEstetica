@@ -90,7 +90,7 @@ if (!isset($_SESSION['verified']) || $_SESSION['verified'] !== true) {
 				</li>
 
 				<li class="nav-item">
-					<a class="nav-link" href="#">Clientes</a>
+					<a class="nav-link" href="Clientes.php">Clientes</a>
 				</li>
 
 
@@ -175,7 +175,7 @@ if (!isset($_SESSION['verified']) || $_SESSION['verified'] !== true) {
 				
 			<select name="ciudad" class="custom-select" required>
 					<option value="">Roles</option>
-					<option value="1">Encarcada</option>
+					<option value="1">Encargada</option>
 					<option value="2">Dueña</option>
 					<option value="3">Empleado</option>
 				</select>

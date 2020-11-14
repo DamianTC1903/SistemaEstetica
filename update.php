@@ -105,7 +105,7 @@ if (isset($_POST['guardar'])) {
 				</li>
 
 				<li class="nav-item">
-					<a class="nav-link" href="#">Clientes</a>
+					<a class="nav-link" href="Clientes.php">Clientes</a>
 				</li>
 
 

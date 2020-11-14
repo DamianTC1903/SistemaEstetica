@@ -11,19 +11,23 @@ if (!isset($_SESSION['verified']) || $_SESSION['verified'] !== true) {
 
 
 
-
+<!--CODIGO PHP QUE LISTA LA TABLA DE CLIENTES Y SU BUSQUEDA-->
 <?php
 include_once 'tablas/conexion.php';
 
-$sentencia_select = $con->prepare('SELECT *FROM usuarios INNER JOIN roles ON usuarios.id_rol=roles.id_rol ORDER BY id_usuario DESC');
+//$sentencia_select = $con->prepare('SELECT *FROM usuarios INNER JOIN roles ON usuarios.id_rol=roles.id_rol ORDER BY id_usuario DESC');
+$sentencia_select = $con->prepare('SELECT *FROM clientes ORDER BY id_cliente DESC');
 $sentencia_select->execute();
 $resultado = $sentencia_select->fetchAll();
 
 // metodo buscar
 if (isset($_POST['btn_buscar'])) {
 	$buscar_text = $_POST['buscar'];
-	$select_buscar = $con->prepare('
-			SELECT *FROM usuarios INNER JOIN roles ON usuarios.id_rol=roles.id_rol  WHERE nombre_usuario LIKE :campo OR id_usuario LIKE :campo;');
+	//$select_buscar = $con->prepare('
+			//SELECT *FROM usuarios INNER JOIN roles ON usuarios.id_rol=roles.id_rol  WHERE nombre_usuario LIKE :campo OR id_usuario LIKE :campo;');
+
+			$select_buscar = $con->prepare('
+			SELECT *FROM clientes  WHERE nombre_cliente LIKE :campo OR id_cliente LIKE :campo;');
 
 
 
@@ -84,7 +88,7 @@ if (isset($_POST['btn_buscar'])) {
 				</li>
 
 				<li class="nav-item">
-					<a class="nav-link" href="Clientes.php">Clientes</a>
+				<a class="nav-link active" href="Clientes.php">Clientes</a>
 				</li>
 
 
@@ -159,7 +163,7 @@ if (isset($_POST['btn_buscar'])) {
 				<!--Card/inicio de mi tabla Usuarios-->
 
 				<div class="contenedor">
-					<h3>Agregar, actualizar o eliminar usuarios </h3>
+					<h3>Agregar, actualizar o eliminar Clientes </h3>
 					<div >
 						<form action="" class="form-group pt-3" method="post">
 							<input type="text" name="buscar" placeholder="Buscar nombre, id" value="<?php if (isset($buscar_text)) echo $buscar_text; ?>" class="form-control ds-input">
@@ -169,7 +173,7 @@ if (isset($_POST['btn_buscar'])) {
 							</button>
 
 							<button  class="btn btn-outline-primary" >
-							<a href="insert.php" class="fas fa-user-plus" >Nuevo</a>
+							<a href="insertCliente.php" class="fas fa-user-plus" >Nuevo</a>
 							</button>
 
 						
@@ -182,19 +186,20 @@ if (isset($_POST['btn_buscar'])) {
 							<tr class="head">
 								<td>Id</td>
 								<td>Nombre</td>
-								<td>Contraseña</td>
-								<td>Rol</td>
+								<td>Direccion</td>
+								<td>Localidad</td>
+								<td>Telefono</td>
 								<td colspan="2">Acción</td>
 							</tr>
 							<?php foreach ($resultado as $fila) : ?>
 								<tr>
-									<td><?php echo $fila['id_usuario']; ?></td>
-									<td><?php echo $fila['nombre_usuario']; ?></td>
-									<!--ocultamos la contraseña  <td><//?php echo $fila['contraseña_usuario']; ?></td>-->
-									<td><?php echo $ContraseñaOculta="*********"; ?></td>
-									<td><?php echo $fila['nombre_rol']; ?></td>
-									<td><a href="update.php?id=<?php echo $fila['id_usuario']; ?>" class="btn btn-info">Editar</a></td>
-									<td><a href="tablas/delete.php?id=<?php echo $fila['id_usuario']; ?>" class="btn btn-danger">Eliminar</a></td>
+									<td><?php echo $fila['id_cliente']; ?></td>
+									<td><?php echo $fila['nombre_cliente']; ?></td>
+									<td><?php echo $fila['direccion_cliente']; ?></td>
+									<td><?php echo $fila['localidad_cliente']; ?></td>
+									<td><?php echo $fila['telefono_cliente']; ?></td>
+									<td><a href="updateCliente.php?id=<?php echo $fila['id_cliente']; ?>" class="btn btn-info">Editar</a></td>
+									<td><a href="tablas/deleteCliente.php?id=<?php echo $fila['id_cliente']; ?>" class="btn btn-danger">Eliminar</a></td>
 								</tr>
 							<?php endforeach ?>
 						</table>
