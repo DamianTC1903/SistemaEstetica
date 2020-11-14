@@ -11,5 +11,6 @@ user:damian pasword: admin
 -Diseño de body agregado
 -Se añadio Crud de Clientes(Actualiza la base de datos)
 -Formato de telefono agreagos(ej.9994-45-46-47)
+-Se añadio Restriccion por roles(Test empleado no puede entrar a la opcion de usuarios, no podra agregar ni intentar visitar la pagina Usuarios.php)
 
 Tablas: Se oculto la contraseña de las tablas
