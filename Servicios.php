@@ -1,3 +1,6 @@
+
+
+
 <?php
 session_start();
 include_once 'php/obtenerRol.php';
@@ -12,12 +15,12 @@ if (!isset($_SESSION['verified']) || $_SESSION['verified'] !== true) {
 
 
 
-<!--CODIGO PHP QUE LISTA LA TABLA DE CLIENTES Y SU BUSQUEDA-->
+<!--CODIGO PHP QUE LISTA LA TABLA DE SERVICIOS Y SU BUSQUEDA-->
 <?php
 include_once 'tablas/conexion.php';
 
 //$sentencia_select = $con->prepare('SELECT *FROM usuarios INNER JOIN roles ON usuarios.id_rol=roles.id_rol ORDER BY id_usuario DESC');
-$sentencia_select = $con->prepare('SELECT *FROM clientes ORDER BY id_cliente DESC');
+$sentencia_select = $con->prepare('SELECT *FROM servicios INNER JOIN clientes ON servicios.id_cliente=clientes.id_cliente  ORDER BY id_servicios DESC');
 $sentencia_select->execute();
 $resultado = $sentencia_select->fetchAll();
 
@@ -25,14 +28,10 @@ $resultado = $sentencia_select->fetchAll();
 if (isset($_POST['btn_buscar'])) {
 	$buscar_text = $_POST['buscar'];
 	//$select_buscar = $con->prepare('
-	//SELECT *FROM usuarios INNER JOIN roles ON usuarios.id_rol=roles.id_rol  WHERE nombre_usuario LIKE :campo OR id_usuario LIKE :campo;');
+			//SELECT *FROM usuarios INNER JOIN roles ON usuarios.id_rol=roles.id_rol  WHERE nombre_usuario LIKE :campo OR id_usuario LIKE :campo;');
 
-	$select_buscar = $con->prepare('
-			SELECT *FROM clientes  WHERE nombre_cliente LIKE :campo OR id_cliente LIKE :campo;');
-
-
-
-
+			$select_buscar = $con->prepare('
+			SELECT *FROM servicios  INNER JOIN clientes ON servicios.id_cliente=clientes.id_cliente  WHERE id_servicios LIKE :campo OR id_servicios LIKE :campo  OR nombre_cliente LIKE :campo;');
 	$select_buscar->execute(array(
 		':campo' => "%" . $buscar_text . "%"
 	));
@@ -89,11 +88,11 @@ if (isset($_POST['btn_buscar'])) {
 				</li>
 
 				<li class="nav-item">
-					<a class="nav-link active" href="Clientes.php">Clientes</a>
+				<a class="nav-link" href="Clientes.php">Clientes</a>
 				</li>
 
 
-				<li class="nav-item dropdown " <?php echo $restringido ?>>
+				<li class="nav-item dropdown" <?php echo $restringido ?>>
 					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						Usuarios
 					</a>
@@ -115,14 +114,14 @@ if (isset($_POST['btn_buscar'])) {
 						<a class="dropdown-item" href="#">Lista de proveedores</a>
 						<a class="dropdown-item" href="#">Productos</a>
 						<div class="dropdown-divider"></div>
-						<a class="dropdown-item" href="#">Almacen</a>
+						<a class="dropdown-item" href="CorteDeCaja.php">Corte de Caja</a>
 					</div>
 				</li>
 
 
 
 
-				<li class="nav-item dropdown">
+				<li class="nav-item dropdown active">
 					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						Ventas
 					</a>
@@ -134,15 +133,11 @@ if (isset($_POST['btn_buscar'])) {
 					</div>
 				</li>
 
-				<!--no activo de momento
-				<li class="nav-item">
-					<a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Boton no activo</a>
-				</li>
 
-				-->
+		
 			</ul>
 			<form class="form-inline my-2 my-lg-0">
-				<h5>bienvenido(a): <?php echo $_SESSION["nombre_usuario"] . " " . $tipo; ?></h5>
+			<h5>bienvenido(a): <?php echo $_SESSION["nombre_usuario"]." ". $tipo; ?></h5>
 
 				&nbsp;&nbsp;
 
@@ -154,19 +149,19 @@ if (isset($_POST['btn_buscar'])) {
 
 
 
-
+	
 
 
 	<!--Card-->
 	<div class="container pt-3">
-		<div class="card" style="width: 50rem;">
+		<div class="card" style="width: 50rem;" >
 			<div class="card-body ">
 
-				<!--Card/inicio de mi tabla Usuarios-->
+				<!--Card/inicio de mi tabla Servicios-->
 
 				<div class="contenedor">
-					<h3>Agregar, actualizar o eliminar Clientes </h3>
-					<div>
+					<h3>Agregar, actualizar o eliminar Servicios </h3>
+					<div >
 						<form action="" class="form-group pt-3" method="post">
 							<input type="text" name="buscar" placeholder="Buscar nombre, id" value="<?php if (isset($buscar_text)) echo $buscar_text; ?>" class="form-control ds-input">
 							<br>
@@ -174,11 +169,11 @@ if (isset($_POST['btn_buscar'])) {
 								<i class="fas fa-search"></i> Buscar
 							</button>
 
-							<button class="btn btn-outline-primary">
-								<a href="insertCliente.php" class="fas fa-user-plus">Nuevo</a>
+							<button  class="btn btn-outline-primary" >
+							<a href="insertServicio.php" class="fas fa-user-plus" >Nuevo</a>
 							</button>
 
-
+						
 						</form>
 					</div>
 
@@ -186,22 +181,24 @@ if (isset($_POST['btn_buscar'])) {
 					<div class="table-responsive">
 						<table class="table">
 							<tr class="head">
-								<td>Id</td>
-								<td>Nombre</td>
-								<td>Direccion</td>
-								<td>Localidad</td>
-								<td>Telefono</td>
+								<td>Id servicio</td>
+								<td>Cliente</td>
+								<td>Servicio/cita</td>
+								<td >Fecha y Hora</td>
+								<td>Precio</td>
 								<td colspan="2">Acción</td>
 							</tr>
 							<?php foreach ($resultado as $fila) : ?>
 								<tr>
-									<td><?php echo $fila['id_cliente']; ?></td>
-									<td><?php echo $fila['nombre_cliente']; ?></td>
-									<td><?php echo $fila['direccion_cliente']; ?></td>
-									<td><?php echo $fila['localidad_cliente']; ?></td>
-									<td><?php echo $fila['telefono_cliente']; ?></td>
-									<td><a href="updateCliente.php?id=<?php echo $fila['id_cliente']; ?>" class="btn btn-info">Editar</a></td>
-									<td><a href="tablas/deleteCliente.php?id=<?php echo $fila['id_cliente']; ?>" class="btn btn-danger">Eliminar</a></td>
+									<td><?php echo $fila['id_servicios']; ?></td>
+									 <!--Mediante un innerJoin llamare a la tabla de clientes -->
+									 <td><?php echo $fila['nombre_cliente']; ?></td>
+									<td><?php echo $fila['tipo_servicio']; ?></td>
+									<td><?php echo $fila['fecha_servicio']; ?></td>
+									<td><?php echo "$".$fila['precio_servicio']; ?></td>
+									<td><a href="updateServicios.php?id=<?php echo $fila['id_servicios']; ?>" class="btn btn-info">Editar</a></td>
+									<td><a href="tablas/deleteServicios.php?id=<?php echo $fila['id_servicios']; ?>" class="btn btn-danger">Eliminar</a></td>
+									<td><a href="\invoice/ex.php?id=<?php echo $fila['id_servicios']; ?>" class="btn btn-danger">imprimir</a></td>
 								</tr>
 							<?php endforeach ?>
 						</table>

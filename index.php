@@ -88,7 +88,7 @@ include_once 'php/obtenerRol.php';
 						<a class="dropdown-item" href="#">Lista de proveedores</a>
 						<a class="dropdown-item" href="#">Productos</a>
 						<div class="dropdown-divider"></div>
-						<a class="dropdown-item" href="#">Almacen</a>
+						<a class="dropdown-item" href="CorteDeCaja.php">Corte de caja</a>
 					</div>
 				</li>
 
@@ -101,9 +101,9 @@ include_once 'php/obtenerRol.php';
 					</a>
 					<div class="dropdown-menu" aria-labelledby="navbarDropdown">
 						<a class="dropdown-item" href="#">Productos</a>
-						<a class="dropdown-item" href="#">Servicios</a>
+						<a class="dropdown-item" href="Servicios.php">Servicios</a>
 						<div class="dropdown-divider"></div>
-						<a class="dropdown-item" href="#">Almacen</a>
+						<a class="dropdown-item" href="CorteDeCaja.php">Corte de Caja</a>
 					</div>
 				</li>
 
@@ -139,7 +139,7 @@ include_once 'php/obtenerRol.php';
 				<div class="card">
 					<div class="card-body">
 						<button type="button" class="btn btn-primary">
-							Ventas <span class="badge badge-light">4</span>
+							Ventas <span class="badge badge-light"><?php echo $TotalServicios?></span>
 						</button>
 					</div>
 				</div>
@@ -162,7 +162,7 @@ include_once 'php/obtenerRol.php';
 				<div class="card">
 					<div class="card-body">
 						<button type="button" class="btn btn-primary">
-							Empleados <span class="badge badge-light"><?php echo $TotalVentas ?></span>
+							Empleados <span class="badge badge-light"><?php echo $TotalEmpleados ?></span>
 						</button>
 					</div>
 				</div>
@@ -173,7 +173,7 @@ include_once 'php/obtenerRol.php';
 				<div class="card">
 					<div class="card-body">
 						<button type="button" class="btn btn-primary">
-							Productos <span class="badge badge-light">4</span>
+							Gananacias <span class="badge badge-light"><?php echo $suma ?></span>
 						</button>
 					</div>
 				</div>

@@ -17,17 +17,17 @@ $result = $conn->query($sql);
 if ($result->num_rows > 0) {
 	// output data of each row
 	while ($row = $result->fetch_assoc()) {
-		echo  $row["id_rol"];
+		//echo  $row["id_rol"];
 		if ($row["id_rol"] =="1") {
 			$restringido = "";
-			echo "Dueñas";
+			//echo "Dueñas";
 			$tipo = "dueña";
 		} else if ($row["id_rol"] == "2") {
       $restringido = "";
       $tipo = "Encargada";
-			echo "Encargada";
+			//echo "Encargada";
 		} else if ($row["id_rol"] == "3") {
-      echo "Empleada";
+      //echo "Empleada";
       $tipo = "Empleada";
 			$restringido = "hidden";
 		} else {

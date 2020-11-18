@@ -126,16 +126,14 @@ if (isset($_POST['btn_buscar'])) {
 					</a>
 					<div class="dropdown-menu" aria-labelledby="navbarDropdown">
 						<a class="dropdown-item" href="#">Productos</a>
-						<a class="dropdown-item" href="#">Servicios</a>
+						<a class="dropdown-item" href="Servicios.php">Servicios</a>
 						<div class="dropdown-divider"></div>
 						<a class="dropdown-item" href="#">Almacen</a>
 					</div>
 				</li>
 
 
-				<li class="nav-item">
-					<a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Boton no activo</a>
-				</li>
+
 			</ul>
 			<form class="form-inline my-2 my-lg-0">
 				<h5>bienvenido(a): <?php

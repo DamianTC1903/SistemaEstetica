@@ -10,36 +10,54 @@ if (!isset($_SESSION['verified']) || $_SESSION['verified'] !== true) {
 ?>
 
 
+<?php
+include_once 'tablas/conexion.php';
 
-<?php 
-	include_once 'tablas/conexion.php';
-	
-	if(isset($_POST['guardar'])){
-		$nombre=$_POST['nombre'];
-		$apellidos=$_POST['apellidos'];
-		$telefono=$_POST['telefono'];
-		$ciudad=$_POST['ciudad'];
+if (isset($_GET['id'])) {
+	$id = (int) $_GET['id'];
 
-		if(!empty($apellidos) && !empty($telefono) && !empty($ciudad) ){
-			
-				$consulta_insert=$con->prepare('INSERT INTO usuarios(id_usuario,nombre_usuario,contraseña_usuario,id_rol) VALUES(:nombre,:apellidos,:telefono,:ciudad)');
-				$consulta_insert->execute(array(
-					':nombre' =>$nombre,
-					':apellidos' =>$apellidos,
-					':telefono' =>$telefono,
-					':ciudad' =>$ciudad
-				));
-				header('Location: \stetica2/Usuarios.php');
-			
-		}else{
-			echo "<script> alert('Los campos estan vacios');</script>";
-		}
+	$buscar_id = $con->prepare('SELECT * FROM servicios INNER JOIN clientes ON servicios.id_cliente=clientes.id_cliente  WHERE id_servicios=:id LIMIT 1');
+	$buscar_id->execute(array(
+		':id' => $id
+	));
+	$resultado = $buscar_id->fetch();
+} else {
+	header('Location: Servicios.php');
+}
 
+
+if (isset($_POST['guardar'])) {
+	$nombre = $_POST['nombre'];
+	$apellidos = $_POST['apellidos'];
+	$telefono = $_POST['telefono'];
+	$ciudad = $_POST['ciudad'];
+	$telefono_cliente = $_POST['telefono_cliente'];
+	$id = (int) $_GET['id'];
+
+	if (!empty($nombre) && !empty($apellidos) && !empty($telefono) && !empty($ciudad)&& !empty($telefono_cliente)) {
+
+		$consulta_update = $con->prepare(' UPDATE servicios SET  
+					id_servicios=:nombre,
+					id_cliente=:apellidos,
+					tipo_servicio=:telefono,
+					fecha_servicio=:ciudad,
+					precio_servicio=:telefono_cliente
+					WHERE id_servicios=:id;');
+		$consulta_update->execute(array(
+			':nombre' => $nombre,
+			':apellidos' => $apellidos,
+			':telefono' => $telefono,
+			':ciudad' => $ciudad,
+			':telefono_cliente' => $telefono_cliente,
+			':id' => $id
+		));
+		header('Location: Servicios.php');
+	} else {
+		echo "<script> alert('No se hiso ningun cambio');</script>";
 	}
-
+}
 
 ?>
-
 
 
 
@@ -77,7 +95,7 @@ if (!isset($_SESSION['verified']) || $_SESSION['verified'] !== true) {
 
 	<!--Inicio del navbar-->
 	<nav class="navbar navbar-expand-lg navbar-light bg-light">
-		<img href="#" src="\stetica2/img/Logo.svg" width="60" height="60" class="d-inline-block align-top" alt="" loading="lazy">
+		<img src="\stetica2/img/Logo.svg" width="60" height="60" class="d-inline-block align-top" alt="" loading="lazy">
 		<a class="nav-link" href="index.php">Salón Frida <span class="sr-only">(current)</span></a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
@@ -94,7 +112,7 @@ if (!isset($_SESSION['verified']) || $_SESSION['verified'] !== true) {
 				</li>
 
 
-				<li class="nav-item dropdown active">
+				<li class="nav-item dropdown">
 					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						Usuarios
 					</a>
@@ -123,7 +141,7 @@ if (!isset($_SESSION['verified']) || $_SESSION['verified'] !== true) {
 
 
 
-				<li class="nav-item dropdown">
+				<li class="nav-item dropdown active">
 					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						Ventas
 					</a>
@@ -160,33 +178,38 @@ if (!isset($_SESSION['verified']) || $_SESSION['verified'] !== true) {
 	<div class="container pt-3">
 		<div class="card" style="width: 50rem;">
 			<div class="card-body ">
-			<h4 >Datos del nuevo Empleado</h4>
-		<form action="" method="post">
-			<div class="form-group">
-				<input type="hidden" name="nombre" value="" class="form-control">
-				<input type="text" name="apellidos" placeholder="Nombre" class="form-control" required>
-			</div>
-			<div class="form-group">
-				<input type="password" name="telefono" placeholder="Contraseña" class="form-control" required>
-				
-			</div>
+				<h4>Esta editando el servicio a nombre de: <?php if ($resultado) echo $resultado['nombre_cliente']; ?></h4>
+				<br>
+				<form action="" method="post">
+					<div class="form-group">
+						<input type="hidden" name="nombre" value="<?php if ($resultado) echo $resultado['id_servicios']; ?>" class="form-control">
+						
+						<input type="hidden" name="apellidos" value="<?php if ($resultado) echo $resultado['id_cliente']; ?>" class="form-control">
+					</div>
+					<div class="form-group">
+					<h5>Servicio:</h5>
+						<input type="text" name="telefono" value="<?php if ($resultado) echo $resultado['tipo_servicio']; ?>" class="form-control">
 
-			<div class="form-group">
-				
-			<select name="ciudad" class="custom-select" required>
-					<option value="">Roles</option>
-					<option value="1">Encargada</option>
-					<option value="2">Dueña</option>
-					<option value="3">Empleado</option>
-				</select>
-			</div>
-	
-			<div class="btn_group">
-				<a href="\stetica2/Usuarios.php" class="btn btn-secondary">Cancelar</a>
-				<input type="submit" name="guardar" value="Guardar" class="btn btn-success">
-			</div>
-		</form>
-				
+					</div>
+
+					<div class="form-group">
+					<h5>Fecha:  <?php if ($resultado) echo $resultado['fecha_servicio']; ?></h5>
+						<input type="datetime-local" name="ciudad" value="<?php if ($resultado) echo $resultado['fecha_servicio']; ?>" class="form-control">
+
+					</div>
+
+					<div class="form-group">
+					<h5>Costo del servicio:</h5>
+						<input type="number" name="telefono_cliente" value="<?php if ($resultado) echo $resultado['precio_servicio']; ?>" class="form-control" placeholder="Telefono ej. 9994-23-23-24" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9]{2}">
+
+					</div>
+
+					<div class="btn_group">
+						<a href="Servicios.php" class="btn btn-secondary">Cancelar</a>
+						<input type="submit" name="guardar" value="Guardar" class="btn btn-success">
+					</div>
+				</form>
+
 
 
 

@@ -51,7 +51,7 @@
     <header>
       <h1 id="fittext1">403<i class="fa fa-exclamation-triangle fa-fw"></i></h1>
     </header>
-    <p id="fittext2">Accseso Denegado</p>
+    <p id="fittext2">Acceso Denegado</p>
   </article>
 </div>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>

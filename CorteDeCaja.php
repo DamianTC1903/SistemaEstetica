@@ -1,6 +1,6 @@
 <?php
 session_start();
-include_once 'php/obtenerRol.php';
+
 if (!isset($_SESSION['verified']) || $_SESSION['verified'] !== true) {
 	header("Location: login.php");
 
@@ -10,37 +10,14 @@ if (!isset($_SESSION['verified']) || $_SESSION['verified'] !== true) {
 ?>
 
 
-
-
-<!--CODIGO PHP QUE LISTA LA TABLA DE CLIENTES Y SU BUSQUEDA-->
 <?php
-include_once 'tablas/conexion.php';
-
-//$sentencia_select = $con->prepare('SELECT *FROM usuarios INNER JOIN roles ON usuarios.id_rol=roles.id_rol ORDER BY id_usuario DESC');
-$sentencia_select = $con->prepare('SELECT *FROM clientes ORDER BY id_cliente DESC');
-$sentencia_select->execute();
-$resultado = $sentencia_select->fetchAll();
-
-// metodo buscar
-if (isset($_POST['btn_buscar'])) {
-	$buscar_text = $_POST['buscar'];
-	//$select_buscar = $con->prepare('
-	//SELECT *FROM usuarios INNER JOIN roles ON usuarios.id_rol=roles.id_rol  WHERE nombre_usuario LIKE :campo OR id_usuario LIKE :campo;');
-
-	$select_buscar = $con->prepare('
-			SELECT *FROM clientes  WHERE nombre_cliente LIKE :campo OR id_cliente LIKE :campo;');
-
-
-
-
-	$select_buscar->execute(array(
-		':campo' => "%" . $buscar_text . "%"
-	));
-
-	$resultado = $select_buscar->fetchAll();
-}
-
+include_once 'php/consultasEmpleados.php';
 ?>
+
+<?php
+include_once 'php/obtenerRol.php';
+?>
+
 
 
 
@@ -53,15 +30,10 @@ if (isset($_POST['btn_buscar'])) {
 	<!--CDN DE BOOSTRAP-->
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
 	<link rel="stylesheet" href="css/index.css">
-
-	<!--Diseños de botoones y texto descartado de momento-->
 	<script src="js/script.js"></script>
-
-
-	<!--Font Awesome para los iconos-->
-	<script src="https://kit.fontawesome.com/c2bcc47e82.js" crossorigin="anonymous"></script>
-
 </head>
+
+
 
 <style>
 	body {
@@ -74,7 +46,8 @@ if (isset($_POST['btn_buscar'])) {
 
 <body>
 
-	<!--Inicio del navbar-->
+
+
 	<nav class="navbar navbar-expand-lg navbar-light bg-light">
 		<img src="img/Logo.svg" width="60" height="60" class="d-inline-block align-top" alt="" loading="lazy">
 		<a class="nav-link" href="index.php">Salón Frida <span class="sr-only">(current)</span></a>
@@ -84,17 +57,15 @@ if (isset($_POST['btn_buscar'])) {
 
 		<div class="collapse navbar-collapse" id="navbarSupportedContent">
 			<ul class="navbar-nav mr-auto">
-				<li class="nav-item">
-					<a class="nav-link" href="#">Proveedores <span class="sr-only">(current)</span></a>
-				</li>
+
 
 				<li class="nav-item">
-					<a class="nav-link active" href="Clientes.php">Clientes</a>
+					<a class="nav-link" href="Clientes.php">Clientes</a>
 				</li>
 
 
-				<li class="nav-item dropdown " <?php echo $restringido ?>>
-					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<li class="nav-item dropdown" <?php echo $restringido ?>>
+					<a Type="hidden" class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						Usuarios
 					</a>
 					<div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -115,14 +86,14 @@ if (isset($_POST['btn_buscar'])) {
 						<a class="dropdown-item" href="#">Lista de proveedores</a>
 						<a class="dropdown-item" href="#">Productos</a>
 						<div class="dropdown-divider"></div>
-						<a class="dropdown-item" href="#">Almacen</a>
+						<a class="dropdown-item" href="CorteDeCaja.php">Corte de caja</a>
 					</div>
 				</li>
 
 
 
 
-				<li class="nav-item dropdown">
+				<li class="nav-item active dropdown">
 					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						Ventas
 					</a>
@@ -134,95 +105,157 @@ if (isset($_POST['btn_buscar'])) {
 					</div>
 				</li>
 
-				<!--no activo de momento
-				<li class="nav-item">
-					<a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Boton no activo</a>
-				</li>
-
-				-->
 			</ul>
 			<form class="form-inline my-2 my-lg-0">
-				<h5>bienvenido(a): <?php echo $_SESSION["nombre_usuario"] . " " . $tipo; ?></h5>
+				<h5>bienvenido(a): <?php echo $_SESSION["nombre_usuario"]." ". $tipo; ?></h5>
+
+				
 
 				&nbsp;&nbsp;
 
-				<div class="btn btn-info" onclick="logout();">Salir</div>
+				<div class="btn" onclick="logout();">Salir</div>
 			</form>
 		</div>
 	</nav>
-	<!--Fin del navbar-->
 
 
 
 
 
 
-	<!--Card-->
+
+
+
 	<div class="container pt-3">
-		<div class="card" style="width: 50rem;">
-			<div class="card-body ">
-
-				<!--Card/inicio de mi tabla Usuarios-->
-
-				<div class="contenedor">
-					<h3>Agregar, actualizar o eliminar Clientes </h3>
-					<div>
-						<form action="" class="form-group pt-3" method="post">
-							<input type="text" name="buscar" placeholder="Buscar nombre, id" value="<?php if (isset($buscar_text)) echo $buscar_text; ?>" class="form-control ds-input">
-							<br>
-							<button type="submit" class="btn btn-outline-primary" name="btn_buscar" value="Buscar">
-								<i class="fas fa-search"></i> Buscar
-							</button>
-
-							<button class="btn btn-outline-primary">
-								<a href="insertCliente.php" class="fas fa-user-plus">Nuevo</a>
-							</button>
-
-
-						</form>
+		<!--Aqui ira nuestro dashboard-->
+		<div class="row pt-3">
+			<div class="col-sm-3">
+				<div class="card">
+					<div class="card-body">
+						<button type="button" class="btn btn-primary">
+							Servicios <span class="badge badge-light"><?php echo $TotalServicios ?></span>
+						</button>
 					</div>
-
-					<!--Card/tabla resposiva-->
-					<div class="table-responsive">
-						<table class="table">
-							<tr class="head">
-								<td>Id</td>
-								<td>Nombre</td>
-								<td>Direccion</td>
-								<td>Localidad</td>
-								<td>Telefono</td>
-								<td colspan="2">Acción</td>
-							</tr>
-							<?php foreach ($resultado as $fila) : ?>
-								<tr>
-									<td><?php echo $fila['id_cliente']; ?></td>
-									<td><?php echo $fila['nombre_cliente']; ?></td>
-									<td><?php echo $fila['direccion_cliente']; ?></td>
-									<td><?php echo $fila['localidad_cliente']; ?></td>
-									<td><?php echo $fila['telefono_cliente']; ?></td>
-									<td><a href="updateCliente.php?id=<?php echo $fila['id_cliente']; ?>" class="btn btn-info">Editar</a></td>
-									<td><a href="tablas/deleteCliente.php?id=<?php echo $fila['id_cliente']; ?>" class="btn btn-danger">Eliminar</a></td>
-								</tr>
-							<?php endforeach ?>
-						</table>
-					</div>
-					<!--Card/tabla resposiva-->
 				</div>
-				<!--Card/Fin de mi tabla Usuarios-->
+			</div>
 
 
+			<div class="col-sm-3">
+				<div class="card">
+					<div class="card-body">
+						<button type="button" class="btn btn-primary">
+							Clientes <span class="badge badge-light"><?php echo $TotalClientes ?></span>
+						</button>
+					</div>
+				</div>
+			</div>
+
+
+
+			<div class="col-sm-3">
+				<div class="card">
+					<div class="card-body">
+						<button type="button" class="btn btn-primary">
+							Empleados <span class="badge badge-light"><?php echo $TotalVentas ?></span>
+						</button>
+					</div>
+				</div>
+			</div>
+
+
+			<div class="col-sm-3">
+				<div class="card">
+					<div class="card-body">
+						<button type="button" class="btn btn-primary">
+							Ganancia <span class="badge badge-light"><?php echo "$".$suma ?></span>
+						</button>
+					</div>
+				</div>
+			</div>
+
+
+		</div>
+	</div>
+	<!--Aqui ira nuestro dashboard-->
+
+
+
+
+
+
+
+
+	<div class="container ">
+		<div class="row pt-3">
+			<div class="col-sm-6">
+				<div class="card" ">
+					<div class=" card-body ">
+
+
+						<form>
+							<div class=" form-group ">
+								<label for=" exampleInputEmail1">Email address</label>
+					<input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+					<small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+				</div>
+				<div class="form-group  ">
+					<label for="exampleInputPassword1">Password</label>
+					<input type="password" class="form-control" id="exampleInputPassword1">
+				</div>
+				<div class="form-group form-check   ">
+					<input type="checkbox" class="form-check-input" id="exampleCheck1">
+					<label class="form-check-label" for="exampleCheck1">Check me out</label>
+				</div>
+				<button type="submit" class="btn btn-primary">Submit</button>
+				</form>
 
 
 			</div>
 		</div>
 	</div>
 
-	<!--Fin del card-->
+
+
+	<div class="col-sm-6">
+		<div class="card" ">
+					<div class=" card-body ">
+
+
+						<form>
+							<div class=" form-group ">
+								<label for=" exampleInputEmail1">Email address</label>
+			<input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+			<small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+		</div>
+		<div class="form-group  ">
+			<label for="exampleInputPassword1">Password</label>
+			<input type="password" class="form-control" id="exampleInputPassword1">
+		</div>
+		<div class="form-group form-check   ">
+			<input type="checkbox" class="form-check-input" id="exampleCheck1">
+			<label class="form-check-label" for="exampleCheck1">Check me out</label>
+		</div>
+		<button type="submit" class="btn btn-primary">Submit</button>
+		</form>
 
 
 	</div>
+	</div>
+	</div>
 
-	<!--Estilo de boton_lo suplimos por bootstrap
+	</div>
+	</div>
+
+
+
+
+
+
+
+
+
+
+
 
 	<style>
 		.btn {
@@ -247,10 +280,6 @@ if (isset($_POST['btn_buscar'])) {
 			box-shadow: inset 0 0 3px 4px rgba(0, 0, 0, .2);
 		}
 	</style>
-
--->
-
-
 
 
 

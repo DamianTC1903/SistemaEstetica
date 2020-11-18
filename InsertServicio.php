@@ -11,37 +11,39 @@ if (!isset($_SESSION['verified']) || $_SESSION['verified'] !== true) {
 
 
 
-<?php 
-	include_once 'tablas/conexion.php';
-	
-	if(isset($_POST['guardar'])){
-		$nombre=$_POST['nombre'];
-		$apellidos=$_POST['apellidos'];
-		$telefono=$_POST['telefono'];
-		$ciudad=$_POST['ciudad'];
+<?php
+include_once 'tablas/conexion.php';
 
-		if(!empty($apellidos) && !empty($telefono) && !empty($ciudad) ){
-			
-				$consulta_insert=$con->prepare('INSERT INTO usuarios(id_usuario,nombre_usuario,contraseña_usuario,id_rol) VALUES(:nombre,:apellidos,:telefono,:ciudad)');
-				$consulta_insert->execute(array(
-					':nombre' =>$nombre,
-					':apellidos' =>$apellidos,
-					':telefono' =>$telefono,
-					':ciudad' =>$ciudad
-				));
-				header('Location: \stetica2/Usuarios.php');
-			
-		}else{
-			echo "<script> alert('Los campos estan vacios');</script>";
-		}
+if (isset($_POST['guardar'])) {
+	$nombre = $_POST['nombre'];
+	$apellidos = $_POST['apellidos'];
+	$telefono = $_POST['telefono'];
+	$ciudad = $_POST['ciudad'];
+	$telefono_cliente = $_POST['telefono_cliente'];
 
+	if (!empty($apellidos) && !empty($telefono) && !empty($ciudad)  && !empty($telefono_cliente)) {
+
+		$consulta_insert = $con->prepare('INSERT INTO servicios(id_servicios,id_cliente,tipo_servicio,fecha_servicio,precio_servicio) VALUES(:nombre,:apellidos,:telefono,:ciudad,:telefono_cliente)');
+		$consulta_insert->execute(array(
+			':nombre' => $nombre,
+			':apellidos' => $apellidos,
+			':telefono' => $telefono,
+			':ciudad' => $ciudad,
+			':telefono_cliente' => $telefono_cliente
+		));
+		header('Location: Servicios.php');
+	} else {
+		echo "<script> alert('Los campos estan vacios');</script>";
 	}
+}
 
 
 ?>
 
 
-
+<?php
+include_once 'SelectClientes.php';
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -94,7 +96,7 @@ if (!isset($_SESSION['verified']) || $_SESSION['verified'] !== true) {
 				</li>
 
 
-				<li class="nav-item dropdown active">
+				<li class="nav-item dropdown ">
 					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						Usuarios
 					</a>
@@ -123,7 +125,7 @@ if (!isset($_SESSION['verified']) || $_SESSION['verified'] !== true) {
 
 
 
-				<li class="nav-item dropdown">
+				<li class="nav-item dropdown active">
 					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						Ventas
 					</a>
@@ -160,33 +162,39 @@ if (!isset($_SESSION['verified']) || $_SESSION['verified'] !== true) {
 	<div class="container pt-3">
 		<div class="card" style="width: 50rem;">
 			<div class="card-body ">
-			<h4 >Datos del nuevo Empleado</h4>
-		<form action="" method="post">
-			<div class="form-group">
-				<input type="hidden" name="nombre" value="" class="form-control">
-				<input type="text" name="apellidos" placeholder="Nombre" class="form-control" required>
-			</div>
-			<div class="form-group">
-				<input type="password" name="telefono" placeholder="Contraseña" class="form-control" required>
-				
-			</div>
+				<h4>Datos del nuevo Servicio</h4>
+				<form action="" method="post">
+					<div class="form-group">
+						<input type="hidden" name="nombre" value="" class="form-control">
 
-			<div class="form-group">
-				
-			<select name="ciudad" class="custom-select" required>
-					<option value="">Roles</option>
-					<option value="1">Encargada</option>
-					<option value="2">Dueña</option>
-					<option value="3">Empleado</option>
-				</select>
-			</div>
-	
-			<div class="btn_group">
-				<a href="\stetica2/Usuarios.php" class="btn btn-secondary">Cancelar</a>
-				<input type="submit" name="guardar" value="Guardar" class="btn btn-success">
-			</div>
-		</form>
-				
+
+						<select size="5" name="apellidos" class="custom-select" required>
+						<option value="">Selecciona al cliente</option>
+						<?php echo $options?>
+						</select>
+
+					</div>
+
+					<div class="form-group">
+						<input type="text" name="telefono" placeholder="Servicio" class="form-control" required>
+					</div>
+
+					<div class="form-group">
+						<input type="datetime-local" name="ciudad" placeholder="Fecha y Hora" class="form-control" required>
+					</div>
+
+					<div class="form-group">
+						<input type="Number" name="telefono_cliente" placeholder="Precio" class="form-control" required>
+					</div>
+
+
+
+					<div class="btn_group">
+						<a href="Servicios.php" class="btn btn-secondary">Cancelar</a>
+						<input type="submit" name="guardar" value="Guardar" class="btn btn-success">
+					</div>
+				</form>
+
 
 
 
