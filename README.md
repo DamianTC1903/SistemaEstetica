@@ -19,3 +19,6 @@ Tablas: Se oculto la contraseña de las tablas
 proveedores-falta crud
 productos-falta crud
 inventario-falta crud
+
+Se añadio librerias para imprimir recibo de citas y productos(algunos datos por completar) se instalan en /htdocs/
+invoice y pdf
