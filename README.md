@@ -14,3 +14,8 @@ user:damian pasword: admin
 -Se añadio Restriccion por roles(Test empleado no puede entrar a la opcion de usuarios, no podra agregar ni intentar visitar la pagina Usuarios.php)
 
 Tablas: Se oculto la contraseña de las tablas
+
+24 nov
+proveedores-falta crud
+productos-falta crud
+inventario-falta crud
