@@ -15,14 +15,20 @@ include_once 'php/consultasEmpleados.php';
 
 
 
+
+
+
+
+
 <!--CODIGO PHP QUE LISTA LA TABLA DE SERVICIOS Y SU BUSQUEDA-->
 <?php
 include_once 'tablas/conexion.php';
 
 //$sentencia_select = $con->prepare('SELECT *FROM usuarios INNER JOIN roles ON usuarios.id_rol=roles.id_rol ORDER BY id_usuario DESC');
-$sentencia_select = $con->prepare('SELECT *FROM servicios INNER JOIN clientes ON servicios.id_cliente=clientes.id_cliente  ORDER BY id_servicios DESC');
+$sentencia_select = $con->prepare('SELECT *FROM ventaproductos LEFT JOIN productos ON ventaproductos.id_producto = productos.id_producto LEFT JOIN promociones ON productos.id_promocion = promociones.id_promocion LEFT JOIN clientes ON ventaproductos.id_cliente = clientes.id_cliente  ORDER BY id_venta DESC');
 $sentencia_select->execute();
 $resultado = $sentencia_select->fetchAll();
+
 
 // metodo buscar
 if (isset($_POST['btn_buscar'])) {
@@ -114,7 +120,7 @@ if (isset($_POST['btn_buscar'])) {
 				<a href="Servicios.php" class="nav-item nav-link active"><i class="fas fa-cash-register"></i><span>Ventas</span></a>
 				<a href="Clientes.php" class="nav-item nav-link"><i class="fas fa-user-tag"></i><span>Clientes</span></a>
 				<a href="Servicios.php" class="nav-item nav-link"><i class="fas fa-female"></i><span>Servicios</span></a>
-
+	
 				<div class="dropdown">
 					<a class="nav-item nav-link dropdown-toggle user-action" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						<img src="img/admin.png" class="avatar" alt="Avatar"> <?php echo $_SESSION["nombre_usuario"] . "/" . $tipo; ?> <b class="caret"></b>
@@ -146,7 +152,7 @@ if (isset($_POST['btn_buscar'])) {
 
 
 						<button type="button" class="btn btn-primary">
-							Ventas <span class="badge badge-light"><?php echo $TotalServicios ?></span>
+							Ventas <span class="badge badge-light"><?php echo $Totalproductos ?></span>
 						</button>
 					</div>
 				</div>
@@ -180,7 +186,7 @@ if (isset($_POST['btn_buscar'])) {
 				<div class="card">
 					<div class="card-body">
 						<button type="button" class="btn btn-primary">
-							Gananacias <span class="badge badge-light"><?php echo "$".$suma ?></span>
+							Gananacias <span class="badge badge-light"><?php echo "$".$sumaTotalVentaProductos ?></span>
 						</button>
 					</div>
 				</div>
@@ -191,86 +197,136 @@ if (isset($_POST['btn_buscar'])) {
 
 		<!--Aqui ira nuestro dashboard-->
 
+<!--Card-->
+<div class="container pt-3">
 
+<!--
+<div class="card" style="width: 50rem;">-->
+<div class="card">
+	<div class="card-body ">
 
-		<!--
-		<div class="card" style="width: 50rem;">-->
-		<div class="card">
-			<div class="card-body ">
+		<!--Card/inicio de mi tabla Servicios-->
 
-				<!--Card/inicio de mi tabla Servicios-->
-
-				<div class="contenedor">
-					<h3>Citas/Servicios </h3>
-					<!-- Example single danger button -->
-					<div class="btn-group">
-						<button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-							Deseas Vender Productos?
-						</button>
-						<div class="dropdown-menu">
-							<a class="dropdown-item" href="VentaProductos.php">Nueva venta de productos</a>
-							<!--
-							<a class="dropdown-item" href="#">Another action</a>
-							<a class="dropdown-item" href="#">Something else here</a>
-							<div class="dropdown-divider"></div>
-							<a class="dropdown-item" href="#">Separated link</a>
-							 -->
-						</div>
-					</div>
-					<div>
-						<form action="" class="form-group pt-3" method="post">
-							<input type="text" name="buscar" placeholder="Buscar nombre, id" value="<?php if (isset($buscar_text)) echo $buscar_text; ?>" class="form-control ds-input">
-							<br>
-							<button type="submit" class="btn btn-outline-primary" name="btn_buscar" value="Buscar">
-								<i class="fas fa-search"></i> Buscar
-							</button>
-
-							<button class="btn btn-outline-primary">
-								<a href="insertServicio.php" class="fas fa-user-plus">Nuevo</a>
-							</button>
-
-
-						</form>
-					</div>
-
-					<!--Card/tabla resposiva-->
-					<div class="table-responsive">
-						<div class="table-wrapper-scroll-y my-custom-scrollbar">
-							<table class="table">
-								<tr class="head">
-									<td>Id servicio</td>
-									<td>Cliente</td>
-									<td>Servicio/cita</td>
-									<td>Fecha y Hora</td>
-									<td>Precio</td>
-									<td>Accion</td>
-									<td>Acción</td>
-									<!--
-									<td colspan="2">Acción</td>
-									-->
-									<td>Recibo</td>
-
-								</tr>
-								<?php foreach ($resultado as $fila) : ?>
-									<tr>
-										<td><?php echo $fila['id_servicios']; ?></td>
-										<!--Mediante un innerJoin llamare a la tabla de clientes -->
-										<td><?php echo $fila['nombre_cliente']; ?></td>
-										<td><?php echo $fila['tipo_servicio']; ?></td>
-										<td><?php echo $fila['fecha_servicio']; ?></td>
-										<td><?php echo "$" . $fila['precio_servicio']; ?></td>
-										<td><a href="updateServicios.php?id=<?php echo $fila['id_servicios']; ?>" class="btn btn-info">Editar</a></td>
-										<td><a href="tablas/deleteServicios.php?id=<?php echo $fila['id_servicios']; ?>" class="btn btn-danger">Eliminar</a></td>
-										<td><a href="\invoice/ex.php?id=<?php echo $fila['id_servicios']; ?>" class="btn btn-danger">imprimir</a></td>
-									</tr>
-								<?php endforeach ?>
-							</table>
-						</div>
-					</div>
-					<!--Card/tabla resposiva-->
+		<div class="contenedor">
+			<h3>Venta/Productos </h3>
+			<!-- Example single danger button -->
+			<div class="btn-group">
+				<button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					Deseas Vender Productos?
+				</button>
+				<div class="dropdown-menu">
+					<a class="dropdown-item" href="VentaProductos">Nueva venta de productos</a>
+					<a class="dropdown-item" href="#">Another action</a>
+					<a class="dropdown-item" href="#">Something else here</a>
+					<div class="dropdown-divider"></div>
+					<a class="dropdown-item" href="#">Separated link</a>
 				</div>
-				<!--Card/Fin de mi tabla Usuarios-->
+			</div>
+			<div>
+				<form action="" class="form-group pt-3" method="post">
+					<input type="text" name="buscar" placeholder="Buscar nombre, id" value="<?php if (isset($buscar_text)) echo $buscar_text; ?>" class="form-control ds-input">
+					<br>
+					<button type="submit" class="btn btn-outline-primary" name="btn_buscar" value="Buscar">
+						<i class="fas fa-search"></i> Buscar
+					</button>
 
+					<button class="btn btn-outline-primary">
+						<a href="insertVentaProducto.php" class="fas fa-user-plus">Nuevo</a>
+					</button>
+
+
+				</form>
+			</div>
+
+			<!--Card/tabla resposiva-->
+			<div class="table-responsive">
+				<div class="table-wrapper-scroll-y my-custom-scrollbar">
+					<table class="table">
+						<tr class="head">
+							<!--
+							<td>Id venta</td>
+							-->
+							<td>Cliente</td>
+							<td>Nombre</td>
+							<td>Descripcion</td>
+							<td>Unidades</td>
+							<td>Precio</td>
+							<td>promocion</td>
+							<td>subtotal</td>
+							<td>Total</td>
+							<td>Accion</td>
+							<td>Acción</td>
+							<!--
+							<td colspan="2">Acción</td>
+							-->
+							<td>Recibo</td>
+
+						</tr>
+						<?php foreach ($resultado as $fila) : ?>
+							<tr>
+								<!--
+								<td><?php echo $idd = $fila['id_venta']; ?></td>
+								-->
+								<td><?php echo $fila['nombre_cliente']; ?></td>
+								<!--Mediante un innerJoin llamare a la tabla de clientes -->
+								<td><?php echo $fila['nombre_producto']; ?></td>
+								<td><?php echo $fila['descripcion_producto']; ?></td>
+								<td><?php echo $fila['cantidad_producto']; ?></td>
+								<td><?php echo $fila['precio']; ?></td>
+								<td><?php echo "%" . $fila['Descuento']; ?></td>
+								<td><?php echo $subtotal = $fila['precio'] * $fila['cantidad_producto']; ?></td>
+								<td><?php
+
+
+									echo $total = $subtotal - (($fila['precio'] * $fila['Descuento']) / 100) * $fila['cantidad_producto'];
+
+
+
+									//enviamos el total calculado a la tabla de ventas 
+									$servername = "localhost";
+									$username = "root";
+									$password = "";
+									$dbname = "estetica";
+
+									// Create connection
+									$conn = new mysqli($servername, $username, $password, $dbname);
+									// Check connection
+									if ($conn->connect_error) {
+										die("Connection failed: " . $conn->connect_error);
+									}
+
+									$sql = "UPDATE `ventaproductos` SET `total` = $total WHERE `ventaproductos`.`id_venta` = $idd";
+
+									if ($conn->query($sql) === TRUE) {
+										//echo "New record created successfully";
+									} else {
+										echo "Error: " . $sql . "<br>" . $conn->error;
+									}
+
+									$conn->close();
+
+									?></td>
+
+								<td><a href="updateServicios.php?id=<?php echo $fila['id_servicios']; ?>" class="btn btn-info">Editar</a></td>
+								<td><a href="tablas/deleteVentaProductos.php?id=<?php echo $fila['id_venta']; ?>" class="btn btn-danger">Eliminar</a></td>
+								<td><a href="\pdf/ex1.php?id=<?php echo $fila['id_cliente']; ?>" class="btn btn-danger">imprimir</a></td>
+							</tr>
+						<?php endforeach ?>
+					</table>
+				</div>
+			</div>
+			<!--Card/tabla resposiva-->
+		</div>
+		<!--Card/Fin de mi tabla Usuarios-->
+
+
+
+
+	</div>
+</div>
+</div>
+
+<!--Fin del card-->
 
 
 

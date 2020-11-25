@@ -1,13 +1,10 @@
 <?php
 session_start();
-include_once 'php/obtenerRol.php';
+
 if (!isset($_SESSION['verified']) || $_SESSION['verified'] !== true) {
 	header("Location: login.php");
 
 
-	die();
-}else if(!isset($_SESSION['verified']) || $tipo == "Empleada"){
-	header("Location: error/403.php");
 	die();
 }
 ?>
@@ -16,29 +13,56 @@ if (!isset($_SESSION['verified']) || $_SESSION['verified'] !== true) {
 
 
 <?php
+include_once 'php/obtenerRol.php';
+?>
+
+
+
+<?php
+include_once 'SelectPromociones.php';
+?>
+
+
+
+
+<?php
 include_once 'tablas/conexion.php';
 
-$sentencia_select = $con->prepare('SELECT *FROM usuarios INNER JOIN roles ON usuarios.id_rol=roles.id_rol ORDER BY id_usuario DESC');
-$sentencia_select->execute();
-$resultado = $sentencia_select->fetchAll();
+//alertas
+$ocultarAlerta = "hidden";
+$ocultarAlerta1 = "hidden";
+//alertas
+if (isset($_POST['guardar'])) {
+	$dato1 = $_POST['dato1'];
+	$dato2 = $_POST['dato2'];
+	$dato3 = $_POST['dato3'];
+	$dato4 = $_POST['dato4'];
+	$dato5 = $_POST['dato5'];
 
-// metodo buscar
-if (isset($_POST['btn_buscar'])) {
-	$buscar_text = $_POST['buscar'];
-	$select_buscar = $con->prepare('
-			SELECT *FROM usuarios INNER JOIN roles ON usuarios.id_rol=roles.id_rol  WHERE nombre_usuario LIKE :campo OR id_usuario LIKE :campo;');
+	if (!empty($dato2) && !empty($dato3) && !empty($dato4)  && !empty($dato5)) {
 
-
-
-
-	$select_buscar->execute(array(
-		':campo' => "%" . $buscar_text . "%"
-	));
-
-	$resultado = $select_buscar->fetchAll();
+		$consulta_insert = $con->prepare('INSERT INTO productos(id_producto,nombre_producto,descripcion_producto,precio,id_promocion) VALUES(:dato1,:dato2,:dato3,:dato4,:dato5)');
+		$consulta_insert->execute(array(
+			':dato1' => $dato1,
+			':dato2' => $dato2,
+			':dato3' => $dato3,
+			':dato4' => $dato4,
+			':dato5' => $dato5
+		));
+		//header('Refresh: 6; Location: Clientes.php');
+		header('Refresh: 10; URL=Productos.php');
+		$ocultarAlerta = "";
+	} else {
+		//echo "<script> alert('Los campos estan vacios');</script>";
+		$ocultarAlerta = "hidden";
+		$ocultarAlerta1 = "";
+		header('Refresh: 6; URL=Productos.php');
+	}
 }
 
+
 ?>
+
 
 
 
@@ -53,8 +77,7 @@ if (isset($_POST['btn_buscar'])) {
 	<link rel="stylesheet" href="css/index.css">
 
 	<!--Diseños de botoones y texto descartado de momento-->
-	<script src="js/script.js"></script>
-
+	<script src="\stetica2/js/script.js"></script>
 
 	<!--Diseños del nav bar-->
 	<link rel="stylesheet" href="css/navbar.css">
@@ -65,16 +88,18 @@ if (isset($_POST['btn_buscar'])) {
 
 </head>
 
+
 <style>
 	body {
 		background-color: #330000;
-		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' viewBox='0 0 800 400'%3E%3Cdefs%3E%3CradialGradient id='a' cx='396' cy='281' r='514' gradientUnits='userSpaceOnUse'%3E%3Cstop offset='0' stop-color='%23D18'/%3E%3Cstop offset='1' stop-color='%23330000'/%3E%3C/radialGradient%3E%3ClinearGradient id='b' gradientUnits='userSpaceOnUse' x1='400' y1='148' x2='400' y2='333'%3E%3Cstop offset='0' stop-color='%23FA3' stop-opacity='0'/%3E%3Cstop offset='1' stop-color='%23FA3' stop-opacity='0.5'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='url(%23a)' width='800' height='400'/%3E%3Cg fill-opacity='0.4'%3E%3Ccircle fill='url(%23b)' cx='267.5' cy='61' r='300'/%3E%3Ccircle fill='url(%23b)' cx='532.5' cy='61' r='300'/%3E%3Ccircle fill='url(%23b)' cx='400' cy='30' r='300'/%3E%3C/g%3E%3C/svg%3E");
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' viewBox='0 0 800 400'%3E%3Cdefs%3E%3CradialGradient id='a' cx='396' cy='281' r='514' gradientUnits='userSpaceOnUse'%3E%3Cstop offset='0' stop-color='%23D18'/%3E%3Cstop offset='1' stop-color='%23330000'/%3E%3C/radialGradient%3E%3ClinearGradient id='b' gradientUnits='userSpaceOnUse' x1='400' y1='148' x2='400' y2='333'%3E%3Cstop offset='0' stop-color='%23f4ff9e' stop-opacity='0'/%3E%3Cstop offset='1' stop-color='%23f4ff9e' stop-opacity='0.5'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='url(%23a)' width='800' height='400'/%3E%3Cg fill-opacity='0.4'%3E%3Ccircle fill='url(%23b)' cx='267.5' cy='61' r='300'/%3E%3Ccircle fill='url(%23b)' cx='532.5' cy='61' r='300'/%3E%3Ccircle fill='url(%23b)' cx='400' cy='30' r='300'/%3E%3C/g%3E%3C/svg%3E");
 		background-attachment: fixed;
 		background-size: cover;
 	}
 </style>
 
 <body>
+
 
 	<!--Inicio del navbar-->
 	<nav class="navbar navbar-expand-xl navbar-dark bg-dark">
@@ -96,8 +121,8 @@ if (isset($_POST['btn_buscar'])) {
 			</form>
 			<div class="navbar-nav ml-auto">
 				<a href="index.php" class="nav-item nav-link"><i class="fa fa-home"></i><span>Home</span></a>
-				<a href="Proveedores.php" class="nav-item nav-link"><i class="fas fa-truck-moving"></i><span>Proveedores</span></a>
-				<a <?php echo $restringido ?> href="Usuarios.php" class="nav-item nav-link active"><i class="fa fa-users"></i><span>Empleados</span></a>
+				<a href="Proveedores.php" class="nav-item nav-link active"><i class="fas fa-truck-moving"></i><span>Proveedores</span></a>
+				<a <?php echo $restringido ?> href="Usuarios.php" class="nav-item nav-link"><i class="fa fa-users"></i><span>Empleados</span></a>
 				<a href="Servicios.php" class="nav-item nav-link"><i class="fas fa-cash-register"></i><span>Ventas</span></a>
 				<a href="Clientes.php" class="nav-item nav-link"><i class="fas fa-user-tag"></i><span>Clientes</span></a>
 				<a href="Servicios.php" class="nav-item nav-link"><i class="fas fa-female"></i><span>Servicios</span></a>
@@ -118,61 +143,58 @@ if (isset($_POST['btn_buscar'])) {
 	<!--Fin del navbar-->
 
 
+	<!--ALERTAS-->
+	<div <?php echo $ocultarAlerta ?> class="alert alert-success alert-dismissible fade show" role="alert">
+		<strong>Correcto!</strong> Producto añadido.
+		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
 
-	
+	<div <?php echo $ocultarAlerta1 ?> class="alert alert-danger alert-dismissible fade show" role="alert">
+		<strong>Aviso!</strong> No se realizo ningun cambio.
+		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<!--ALERTAS-->
+
+
 
 
 	<!--Card-->
 	<div class="container pt-3">
-		<div class="card" style="width: 50rem;" >
+		<div class="card" style="width: 50rem;">
 			<div class="card-body ">
-
-				<!--Card/inicio de mi tabla Usuarios-->
-
-				<div class="contenedor">
-					<h3>Agregar, actualizar o eliminar usuarios </h3>
-					<div >
-						<form action="" class="form-group pt-3" method="post">
-							<input type="text" name="buscar" placeholder="Buscar nombre, id" value="<?php if (isset($buscar_text)) echo $buscar_text; ?>" class="form-control ds-input">
-							<br>
-							<button type="submit" class="btn btn-outline-primary" name="btn_buscar" value="Buscar">
-								<i class="fas fa-search"></i> Buscar
-							</button>
-
-							<button  class="btn btn-outline-primary" >
-							<a href="insert.php" class="fas fa-user-plus" >Nuevo</a>
-							</button>
-
-						
-						</form>
+				<h4>Nuevo Producto</h4>
+				<form action="" method="post">
+					<div class="form-group">
+						<input type="hidden" name="dato1" value="" class="form-control">
+						<input type="text" name="dato2" placeholder="Nombre" class="form-control" required>
 					</div>
 
-					<!--Card/tabla resposiva-->
-					<div class="table-responsive">
-						<table class="table">
-							<tr class="head">
-								<td>Id</td>
-								<td>Nombre</td>
-								<td>Contraseña</td>
-								<td>Rol</td>
-								<td colspan="2">Acción</td>
-							</tr>
-							<?php foreach ($resultado as $fila) : ?>
-								<tr>
-									<td><?php echo $fila['id_usuario']; ?></td>
-									<td><?php echo $fila['nombre_usuario']; ?></td>
-									<!--ocultamos la contraseña  <td><//?php echo $fila['contraseña_usuario']; ?></td>-->
-									<td><?php echo $ContraseñaOculta="*********"; ?></td>
-									<td><?php echo $fila['nombre_rol']; ?></td>
-									<td><a href="update.php?id=<?php echo $fila['id_usuario']; ?>" class="btn btn-info">Editar</a></td>
-									<td><a href="tablas/delete.php?id=<?php echo $fila['id_usuario']; ?>" class="btn btn-danger">Eliminar</a></td>
-								</tr>
-							<?php endforeach ?>
-						</table>
+					<div class="form-group">
+						<input type="text" name="dato3" placeholder="Descripcion" class="form-control" required>
 					</div>
-					<!--Card/tabla resposiva-->
-				</div>
-				<!--Card/Fin de mi tabla Usuarios-->
+
+					<div class="form-group">
+						<input type="number" name="dato4" placeholder="precio" class="form-control" required>
+					</div>
+
+					<div class="form-group">
+						<select size="5" name="dato5" class="custom-select" required>
+							<option value="">Selecciona el descuento en %</option>
+							<?php echo "descuento".$optionsProductosDescuento ?>
+						</select>
+					</div>
+
+
+					<div class="btn_group">
+						<a href="Productos.php" class="btn btn-secondary">Cancelar</a>
+						<input type="submit" name="guardar" value="Guardar" class="btn btn-success">
+					</div>
+				</form>
+
 
 
 
@@ -184,7 +206,7 @@ if (isset($_POST['btn_buscar'])) {
 	<!--Fin del card-->
 
 
-	</div>
+
 
 	<!--Estilo de boton_lo suplimos por bootstrap
 

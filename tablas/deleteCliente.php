@@ -7,8 +7,11 @@
 		$delete->execute(array(
 			':id'=>$id
 		));
-		header('Location: \stetica2/Clientes.php');
+		$eliminado="1";
+		header('Location: \stetica2/Clientes.php?d='.$eliminado.'');
+		
 	}else{
-		header('Location: \stetica2/Clientes.php');
+		$eliminado="2";
+		header('Location: \stetica2/Clientes.php?d='.$eliminado.'');
 	}
  ?>

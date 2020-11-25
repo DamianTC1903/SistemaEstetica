@@ -44,26 +44,41 @@ include_once 'php/obtenerRol.php';
 	}
 </style>
 
+
+<style>
+	.card {
+		background-color: #ffebee;
+		border-radius: 10px;
+	
+	}
+</style>
+
 <body>
 
 
 
-	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+	<nav class="navbar navbar-expand-lg navbar-light " style="background-color: #f8bbd0;">
 		<img src="img/Logo.svg" width="60" height="60" class="d-inline-block align-top" alt="" loading="lazy">
-		<a class="nav-link" href="index.php">Salón Frida <span class="sr-only">(current)</span></a>
+
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
 
 		<div class="collapse navbar-collapse" id="navbarSupportedContent">
 			<ul class="navbar-nav mr-auto">
-				<!--
-				<li class="nav-item">
-					<a class="nav-link" href="#">Prov <span class="sr-only">(current)</span></a>
+
+				<!--Ocultamos
+				<li class="nav-item active">
+					<a class="nav-link" href="#">Inicio <span class="sr-only">(current)</span></a>
 				</li>
-			    -->
+-->
+
+				<li class="nav-item active">
+					<a class="nav-link" href="index.php">Salón Frida </a>
+				</li>
 
 				<li class="nav-item">
+
 					<a class="nav-link" href="Clientes.php">Clientes</a>
 				</li>
 
@@ -97,7 +112,7 @@ include_once 'php/obtenerRol.php';
 
 
 
-				<li class="nav-item active dropdown">
+				<li class="nav-item dropdown">
 					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						Ventas
 					</a>
@@ -109,6 +124,11 @@ include_once 'php/obtenerRol.php';
 					</div>
 				</li>
 
+				<!--Ocultamos
+				<li class="nav-item">
+					<a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Boton no activo</a>
+				</li>
+				-->
 			</ul>
 			<form class="form-inline my-2 my-lg-0">
 				<h5>bienvenido(a): <?php echo $_SESSION["nombre_usuario"] . " " . $tipo; ?></h5>
@@ -117,10 +137,14 @@ include_once 'php/obtenerRol.php';
 
 				&nbsp;&nbsp;
 
-				<div class="btn" onclick="logout();">Salir</div>
+				<div class="btn btn-info" onclick="logout();">Salir</div>
 			</form>
 		</div>
 	</nav>
+
+
+
+
 
 
 
@@ -200,7 +224,7 @@ include_once 'php/obtenerRol.php';
 							<div class=" form-group ">
 								<label for=" exampleInputEmail1">Email address</label>
 					<input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-					<small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+					<small id="emailHelp" class="form-text text-muted">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Odio quibusdam architecto consequatur quis quod corrupti, nulla ducimus quaerat? Non veniam id quas consequatur tempora ducimus placeat saepe ipsam. Nulla, et..</small>
 				</div>
 				<div class="form-group  ">
 					<label for="exampleInputPassword1">Password</label>
@@ -229,7 +253,7 @@ include_once 'php/obtenerRol.php';
 							<div class=" form-group ">
 								<label for=" exampleInputEmail1">Email address</label>
 			<input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-			<small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+			<small id="emailHelp" class="form-text text-muted">Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus illum molestias aperiam amet non esse consectetur fugiat corporis. Eaque est dignissimos tempora dolor laboriosam hic molestiae maxime voluptates voluptate minus.</small>
 		</div>
 		<div class="form-group  ">
 			<label for="exampleInputPassword1">Password</label>
@@ -258,8 +282,7 @@ include_once 'php/obtenerRol.php';
 
 
 
-
-
+	<!--Estilo de boton_lo suplimos por bootstrap
 
 	<style>
 		.btn {
@@ -285,8 +308,7 @@ include_once 'php/obtenerRol.php';
 		}
 	</style>
 
-
-
+-->
 
 
 

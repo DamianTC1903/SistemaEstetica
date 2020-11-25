@@ -11,9 +11,20 @@ if (!isset($_SESSION['verified']) || $_SESSION['verified'] !== true) {
 
 
 
+
+<?php
+include_once 'php/obtenerRol.php';
+?>
+
+
+
 <?php
 include_once 'tablas/conexion.php';
 
+//alertas
+$ocultarAlerta = "hidden";
+$ocultarAlerta1 = "hidden";
+//alertas
 if (isset($_POST['guardar'])) {
 	$nombre = $_POST['nombre'];
 	$apellidos = $_POST['apellidos'];
@@ -31,9 +42,14 @@ if (isset($_POST['guardar'])) {
 			':ciudad' => $ciudad,
 			':telefono_cliente' => $telefono_cliente
 		));
-		header('Location: Clientes.php');
+		//header('Refresh: 6; Location: Clientes.php');
+		header('Refresh: 10; URL=Clientes.php');
+		$ocultarAlerta = "";
 	} else {
-		echo "<script> alert('Los campos estan vacios');</script>";
+		//echo "<script> alert('Los campos estan vacios');</script>";
+		$ocultarAlerta = "hidden";
+		$ocultarAlerta1 = "";
+		header('Refresh: 6; URL=Clientes.php');
 	}
 }
 
@@ -56,6 +72,9 @@ if (isset($_POST['guardar'])) {
 	<!--Diseños de botoones y texto descartado de momento-->
 	<script src="\stetica2/js/script.js"></script>
 
+	<!--Diseños del nav bar-->
+	<link rel="stylesheet" href="css/navbar.css">
+
 
 	<!--Font Awesome para los iconos-->
 	<script src="https://kit.fontawesome.com/c2bcc47e82.js" crossorigin="anonymous"></script>
@@ -76,82 +95,62 @@ if (isset($_POST['guardar'])) {
 
 
 	<!--Inicio del navbar-->
-	<nav class="navbar navbar-expand-lg navbar-light bg-light">
-		<img href="#" src="\stetica2/img/Logo.svg" width="60" height="60" class="d-inline-block align-top" alt="" loading="lazy">
-		<a class="nav-link" href="index.php">Salón Frida <span class="sr-only">(current)</span></a>
-		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+	<nav class="navbar navbar-expand-xl navbar-dark bg-dark">
+		<img src="img/Logo.svg" width="900" height="90" alt="">
+		<a href="index.php" class="navbar-brand">Frida<b>kahlo</b></a>
+		<button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
 			<span class="navbar-toggler-icon"></span>
 		</button>
+		<!-- Collection of nav links, forms, and other content for toggling -->
+		<div id="navbarCollapse" class="collapse navbar-collapse justify-content-start">
+			<form class="navbar-form form-inline">
+				<!--Ignoramos el search
+				<div class="input-group search-box">
+					<input type="text" id="search" class="form-control" placeholder="Search here...">
+					<span class="input-group-addon"><i class="material-icons">&#xE8B6;</i></span>
+				</div>
 
-		<div class="collapse navbar-collapse" id="navbarSupportedContent">
-			<ul class="navbar-nav mr-auto">
-				<li class="nav-item">
-					<a class="nav-link" href="#">Proveedores <span class="sr-only">(current)</span></a>
-				</li>
-
-				<li class="nav-item">
-					<a class="nav-link" href="Clientes.php">Clientes</a>
-				</li>
-
-
-				<li class="nav-item dropdown active">
-					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						Usuarios
-					</a>
-					<div class="dropdown-menu" aria-labelledby="navbarDropdown">
-						<a class="dropdown-item" href="Usuarios.php">Empleados</a>
-						<a class="dropdown-item" href="#">Roles de Empleados</a>
-						<div class="dropdown-divider"></div>
-						<a class="dropdown-item" href="#">Clientes</a>
-					</div>
-				</li>
-
-
-
-				<li class="nav-item dropdown">
-					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						Proveedores
-					</a>
-					<div class="dropdown-menu" aria-labelledby="navbarDropdown">
-						<a class="dropdown-item" href="#">Lista de proveedores</a>
-						<a class="dropdown-item" href="#">Productos</a>
-						<div class="dropdown-divider"></div>
-						<a class="dropdown-item" href="#">Almacen</a>
-					</div>
-				</li>
-
-
-
-
-				<li class="nav-item dropdown">
-					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						Ventas
-					</a>
-					<div class="dropdown-menu" aria-labelledby="navbarDropdown">
-						<a class="dropdown-item" href="#">Productos</a>
-						<a class="dropdown-item" href="#">Servicios</a>
-						<div class="dropdown-divider"></div>
-						<a class="dropdown-item" href="#">Almacen</a>
-					</div>
-				</li>
-
-
-				<li class="nav-item">
-					<a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Boton no activo</a>
-				</li>
-			</ul>
-			<form class="form-inline my-2 my-lg-0">
-				<h5>bienvenido(a): <?php
-									echo $_SESSION["nombre_usuario"]; ?></h5>
-
-				&nbsp;&nbsp;
-
-				<div class="btn btn-info" onclick="logout();">Salir</div>
+				 -->
 			</form>
+			<div class="navbar-nav ml-auto">
+				<a href="index.php" class="nav-item nav-link"><i class="fa fa-home"></i><span>Home</span></a>
+				<a href="Proveedores.php" class="nav-item nav-link"><i class="fas fa-truck-moving"></i><span>Proveedores</span></a>
+				<a <?php echo $restringido ?> href="Usuarios.php" class="nav-item nav-link"><i class="fa fa-users"></i><span>Empleados</span></a>
+				<a href="Servicios.php" class="nav-item nav-link"><i class="fas fa-cash-register"></i><span>Ventas</span></a>
+				<a href="Clientes.php" class="nav-item nav-link active"><i class="fas fa-user-tag"></i><span>Clientes</span></a>
+				<a href="Servicios.php" class="nav-item nav-link"><i class="fas fa-female"></i><span>Servicios</span></a>
+
+				<div class="dropdown">
+					<a class="nav-item nav-link dropdown-toggle user-action" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						<img src="img/admin.png" class="avatar" alt="Avatar"> <?php echo $_SESSION["nombre_usuario"] . "/" . $tipo; ?> <b class="caret"></b>
+					</a>
+					<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+						<a class="dropdown-item" href="#"><i class="fa fa-user-o"></i>Perfil</a>
+						<a onclick="logout();" class="dropdown-item" href="#"><i class="material-icons">&#xE8AC;</i>Cerrar Sesion</a>
+					</div>
+				</div>
+
+			</div>
 		</div>
 	</nav>
 	<!--Fin del navbar-->
 
+
+	<!--ALERTAS-->
+	<div <?php echo $ocultarAlerta ?> class="alert alert-success alert-dismissible fade show" role="alert">
+		<strong>Correcto!</strong> Cliente añadido.
+		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+
+	<div <?php echo $ocultarAlerta1 ?> class="alert alert-danger alert-dismissible fade show" role="alert">
+		<strong>Aviso!</strong> No se realizo ningun cambio.
+		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<!--ALERTAS-->
 
 
 
@@ -176,10 +175,10 @@ if (isset($_POST['guardar'])) {
 					</div>
 
 					<div class="form-group">
-						<input type="tel" name="telefono_cliente" placeholder="Telefono ej. 9994-23-23-24" class="form-control" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9]{2}" required>
+						<input type="tel" name="telefono_cliente" placeholder="Telefono ej. 9994-23-23-24" class="form-control" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9]{2}" title="Telefono ej. 9994-23-23-24" required>
 					</div>
 
-					
+
 
 					<div class="btn_group">
 						<a href="Clientes.php" class="btn btn-secondary">Cancelar</a>

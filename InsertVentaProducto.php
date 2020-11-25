@@ -10,6 +10,7 @@ if (!isset($_SESSION['verified']) || $_SESSION['verified'] !== true) {
 ?>
 
 
+
 <?php
 include_once 'php/obtenerRol.php';
 ?>
@@ -17,37 +18,78 @@ include_once 'php/obtenerRol.php';
 
 
 
-<?php 
-	include_once 'tablas/conexion.php';
-	
-	if(isset($_POST['guardar'])){
-		$nombre=$_POST['nombre'];
-		$apellidos=$_POST['apellidos'];
-		$telefono=$_POST['telefono'];
-		$ciudad=$_POST['ciudad'];
+<?php
+include_once 'tablas/conexion.php';
 
-		if(!empty($apellidos) && !empty($telefono) && !empty($ciudad) ){
-			
-				$consulta_insert=$con->prepare('INSERT INTO usuarios(id_usuario,nombre_usuario,contraseña_usuario,id_rol) VALUES(:nombre,:apellidos,:telefono,:ciudad)');
-				$consulta_insert->execute(array(
-					':nombre' =>$nombre,
-					':apellidos' =>$apellidos,
-					':telefono' =>$telefono,
-					':ciudad' =>$ciudad
-				));
-				header('Location: \stetica2/Usuarios.php');
-			
-		}else{
-			echo "<script> alert('Los campos estan vacios');</script>";
-		}
 
+
+
+if (isset($_POST['guardar'])) {
+	$nombre = $_POST['nombre'];
+	$apellidos = $_POST['apellidos'];
+	$telefono = $_POST['telefono'];
+	$ciudad = $_POST['ciudad'];
+	$telefono_cliente = $_POST['telefono_cliente'];
+
+
+
+
+	if (!empty($apellidos) && !empty($telefono) && !empty($ciudad)  && !empty($telefono_cliente)) {
+
+		$consulta_insert = $con->prepare('INSERT INTO ventaproductos(id_venta,id_cliente,id_producto,fecha,cantidad_producto) VALUES(:nombre,:apellidos,:telefono,:ciudad,:telefono_cliente)');
+		$consulta_insert->execute(array(
+			':nombre' => $nombre,
+			':apellidos' => $apellidos,
+			':telefono' => $telefono,
+			':ciudad' => $ciudad,
+			':telefono_cliente' => $telefono_cliente
+		));
+		header('Location: insertVentaProducto.php');
+	} else {
+		echo "<script> alert('Los campos estan vacios');</script>";
 	}
+}
+
+
+
+
+
+
+
+
+// metodo buscar
+if (isset($_POST['btn_buscar'])) {
+	$buscar_text = $_POST['buscar'];
+	//$select_buscar = $con->prepare('
+	//SELECT *FROM usuarios INNER JOIN roles ON usuarios.id_rol=roles.id_rol  WHERE nombre_usuario LIKE :campo OR id_usuario LIKE :campo;');
+
+	$select_buscar = $con->prepare('
+	SELECT *FROM ventaproductos  INNER JOIN productos ON ventaproductos.id_producto = productos.id_producto  INNER JOIN promociones ON productos.id_promocion = promociones.id_promocion  INNER JOIN clientes ON ventaproductos.id_cliente = clientes.id_cliente WHERE clientes.nombre_cliente LIKE :campo OR clientes.id_cliente LIKE :campo;');
+
+
+		//	SELECT *FROM ventaproductos  INNER JOIN productos ON ventaproductos.id_producto = productos.id_producto  INNER JOIN promociones ON productos.id_promocion = promociones.id_promocion  INNER JOIN clientes ON ventaproductos.id_cliente = clientes.id_cliente 
+
+
+
+
+	$select_buscar->execute(array(
+		':campo' => "%" . $buscar_text . "%"
+	));
+
+	$resultado = $select_buscar->fetchAll();
+}
 
 
 ?>
 
 
+<?php
+include_once 'SelectProductos.php';
+?>
 
+<?php
+include_once 'SelectClientes.php';
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -64,6 +106,7 @@ include_once 'php/obtenerRol.php';
 
 	<!--Diseños del nav bar-->
 	<link rel="stylesheet" href="css/navbar.css">
+
 
 	<!--Font Awesome para los iconos-->
 	<script src="https://kit.fontawesome.com/c2bcc47e82.js" crossorigin="anonymous"></script>
@@ -103,9 +146,9 @@ include_once 'php/obtenerRol.php';
 			</form>
 			<div class="navbar-nav ml-auto">
 				<a href="index.php" class="nav-item nav-link"><i class="fa fa-home"></i><span>Home</span></a>
-				<a href="Proveedores.php" class="nav-item nav-link"><i class="class="fas fa-truck-moving""></i><span>Proveedores</span></a>
-				<a <?php echo $restringido ?> href="Usuarios.php" class="nav-item nav-link active"><i class="fa fa-users"></i><span>Empleados</span></a>
-				<a href="Servicios.php" class="nav-item nav-link"><i class="fas fa-cash-register"></i><span>Ventas</span></a>
+				<a href="Proveedores.php" class="nav-item nav-link"><i class="fas fa-truck-moving"></i><span>Proveedores</span></a>
+				<a <?php echo $restringido ?> href="Usuarios.php" class="nav-item nav-link"><i class="fa fa-users"></i><span>Empleados</span></a>
+				<a href="Servicios.php" class="nav-item nav-link active"><i class="fas fa-cash-register"></i><span>Ventas</span></a>
 				<a href="Clientes.php" class="nav-item nav-link"><i class="fas fa-user-tag"></i><span>Clientes</span></a>
 				<a href="Servicios.php" class="nav-item nav-link"><i class="fas fa-female"></i><span>Servicios</span></a>
 
@@ -127,37 +170,48 @@ include_once 'php/obtenerRol.php';
 
 
 
+
 	<!--Card-->
 	<div class="container pt-3">
 		<div class="card" style="width: 50rem;">
 			<div class="card-body ">
-			<h4 >Datos del nuevo Empleado</h4>
-		<form action="" method="post">
-			<div class="form-group">
-				<input type="hidden" name="nombre" value="" class="form-control">
-				<input type="text" name="apellidos" placeholder="Nombre" class="form-control" required>
-			</div>
-			<div class="form-group">
-				<input type="password" name="telefono" placeholder="Contraseña" class="form-control" required>
-				
-			</div>
+				<h4>Nueva venta De productos</h4>
+				<form action="" method="post">
+					<div class="form-group">
+						<input type="hidden" name="nombre" value="" class="form-control">
 
-			<div class="form-group">
-				
-			<select name="ciudad" class="custom-select" required>
-					<option value="">Roles</option>
-					<option value="1">Encargada</option>
-					<option value="2">Dueña</option>
-					<option value="3">Empleado</option>
-				</select>
-			</div>
-	
-			<div class="btn_group">
-				<a href="\stetica2/Usuarios.php" class="btn btn-secondary">Cancelar</a>
-				<input type="submit" name="guardar" value="Guardar" class="btn btn-success">
-			</div>
-		</form>
-				
+
+						<select size="5" name="apellidos" class="custom-select" required>
+							<option value="">Selecciona al cliente</option>
+							<?php echo $options ?>
+						</select>
+
+					</div>
+
+					<div class="form-group">
+						<select size="5" name="telefono" class="custom-select" required>
+							<option value="">Selecciona al cliente</option>
+							<?php echo $optionsProductos ?>
+						</select>
+					</div>
+
+					<div class="form-group">
+						<input type="datetime-local" name="ciudad" placeholder="Fecha y Hora" class="form-control" required>
+					</div>
+
+					<div class="form-group">
+						<input type="Number" name="telefono_cliente" placeholder="cantidad" class="form-control" required>
+					</div>
+
+
+
+
+					<div class="btn_group">
+						<a href="VentaProductos.php" class="btn btn-secondary">Cancelar</a>
+						<input type="submit" name="guardar" value="Guardar" class="btn btn-success">
+					</div>
+				</form>
+
 
 
 
@@ -171,33 +225,10 @@ include_once 'php/obtenerRol.php';
 
 
 
-	<!--Estilo de boton_lo suplimos por bootstrap
 
-	<style>
-		.btn {
-			background: #be03fc;
-			padding: 2px 15px;
-			border-radius: 3px;
-			font-size: 1.2em;
-			cursor: pointer;
-			margin: 5px 0;
-			color: white;
-			font-weight: bold;
-			user-select: none;
-			display: inline-block;
-			transition: background .3s;
-		}
 
-		.btn:hover {
-			background: #a702de;
-		}
 
-		.btn:active {
-			box-shadow: inset 0 0 3px 4px rgba(0, 0, 0, .2);
-		}
-	</style>
-
--->
+	
 
 
 
